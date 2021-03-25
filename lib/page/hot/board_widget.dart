@@ -21,7 +21,7 @@ Widget HotBoardWidget({
             borderRadius: Radii.k6pxRadius,
           ),
           alignment: Alignment.center,
-          height: duSetHeight(140),
+          height: duSetHeight(150),
           width: duSetWidth(130),
           margin: EdgeInsets.symmetric(
               vertical: duSetHeight(10), horizontal: duSetWidth(5)),
@@ -64,7 +64,7 @@ Widget HotBoardWidget({
                 child: Text(item['title']),
               ),
               Container(
-                padding: EdgeInsets.all(3),
+                padding: EdgeInsets.all(duSetWidth(3)),
                 decoration: BoxDecoration(
                   color: AppColors.bgGrey,
                   borderRadius: Radii.k10pxRadius,
