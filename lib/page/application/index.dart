@@ -6,6 +6,7 @@ import 'package:shuimushequ/page/hot/index.dart';
 import 'package:shuimushequ/page/home/index.dart';
 import 'package:shuimushequ/page/discuss/index.dart';
 import 'package:shuimushequ/page/profile/index.dart';
+import 'package:shuimushequ/page/test/index.dart';
 
 class ApplicationPage extends StatefulWidget {
   ApplicationPage({Key key}) : super(key: key);
@@ -17,7 +18,7 @@ class ApplicationPage extends StatefulWidget {
 class _ApplicationPageState extends State<ApplicationPage>
     with SingleTickerProviderStateMixin {
   int _page = 0;
-  final List<String> _tabTitles = ["Home", "Top 10", "讨论区", "我"];
+  final List<String> _tabTitles = ["Home", "Top 10", "讨论区", "我", 'test'];
   final List<BottomNavigationBarItem> _bottomTabs = <BottomNavigationBarItem>[
     // home
     new BottomNavigationBarItem(
@@ -71,6 +72,18 @@ class _ApplicationPageState extends State<ApplicationPage>
       label: 'Profile',
       backgroundColor: AppColors.white,
     ),
+    new BottomNavigationBarItem(
+      icon: Icon(
+        Icons.tab,
+        color: AppColors.tabBarElement,
+      ),
+      activeIcon: Icon(
+        Icons.tab,
+        color: AppColors.fontBlue,
+      ),
+      label: 'Test',
+      backgroundColor: AppColors.white,
+    ),
   ];
   PageController _pageController;
   Widget _buildAppbar() {
@@ -105,7 +118,13 @@ class _ApplicationPageState extends State<ApplicationPage>
   Widget _buildBody() {
     return PageView(
       physics: NeverScrollableScrollPhysics(),
-      children: <Widget>[HomePage(), HotPage(), MessagePage(), ProfilePage()],
+      children: <Widget>[
+        HomePage(),
+        HotPage(),
+        MessagePage(),
+        ProfilePage(),
+        TestPage(),
+      ],
       controller: _pageController,
       onPageChanged: _handlePageChanged,
     );

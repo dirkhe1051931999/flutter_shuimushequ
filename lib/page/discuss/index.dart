@@ -11,6 +11,7 @@ import 'package:shuimushequ/common/utils/date.dart';
 import 'package:shuimushequ/common/utils/index.dart';
 import 'package:shuimushequ/common/values/index.dart';
 import 'package:shuimushequ/common/widgets/index.dart';
+import 'package:shuimushequ/page/discuss/section_detail_widget.dart';
 import 'package:shuimushequ/page/discuss/section_widget.dart';
 
 class MessagePage extends StatefulWidget {
@@ -24,28 +25,16 @@ class _MessagePageState extends State<MessagePage>
     with AutomaticKeepAliveClientMixin {
   @override
   bool get wantKeepAlive => true; // 返回true
+  String _sectionId = '7fba65e45f678eb8c605d4107de04185';
   AppState _appState;
   TypeDiscussSectionResponse _allSection;
   TypeDiscussSectionDetailResponse _sectionDetail;
-  EasyRefreshController _controller;
+  ScrollController scrollController = ScrollController();
   @override
   void initState() {
     super.initState();
     print('discuss init');
-    _controller = EasyRefreshController();
     _loadAllData();
-    _loadLatestWithDiskCache();
-  }
-
-  _loadLatestWithDiskCache() {
-    if (CACHE_ENABLE == true) {
-      var cacheData = StorageUtil().getJSON(STORAGE_DISCUSS_CACHE_KEY);
-      if (cacheData != null) {
-        Timer(Duration(seconds: 3), () {
-          _controller.callRefresh();
-        });
-      }
-    }
   }
 
   _loadAllData() async {
@@ -53,11 +42,18 @@ class _MessagePageState extends State<MessagePage>
       context: context,
     );
     String id = _allSection.data.toJson()['sections'][0]['id'];
-    _sectionDetail =
-        await DiscussAPI.getSectionDetail(context: context, params: {"id": id});
+    _sectionId = id;
+    _sectionDetail = await DiscussAPI.getSectionDetail(
+      context: context,
+      params: {"id": _sectionId},
+    );
     if (mounted) {
       setState(() {});
     }
+  }
+
+  void _scrollToTop() {
+    scrollController.jumpTo(scrollController.position.minScrollExtent);
   }
 
   Widget _buildSection() {
@@ -65,14 +61,35 @@ class _MessagePageState extends State<MessagePage>
         ? Container()
         : SectionWidget(
             discuss: _allSection,
-            onTap: (item) {
+            id: _sectionId,
+            onTap: (item) async {
               print(item);
+              _sectionId = item['id'];
+              _sectionDetail = await DiscussAPI.getSectionDetail(
+                context: context,
+                params: {"id": _sectionId},
+              );
+              if (mounted) {
+                setState(() {
+                  this._scrollToTop();
+                });
+              }
             },
           );
   }
 
   Widget _buildSectionDetail() {
-    return Text('');
+    return _sectionDetail == null
+        ? Container()
+        : SectionDetailWidget(
+            discussDetail: _sectionDetail,
+            onTap: (item) {
+              print(item);
+            },
+            onTapHot: (item) {
+              print('today hot');
+            },
+          );
   }
 
   @override
@@ -81,27 +98,24 @@ class _MessagePageState extends State<MessagePage>
 
     return _allSection == null || _sectionDetail == null
         ? cardListSkeleton()
-        : EasyRefresh(
-            enableControlFinishRefresh: true,
-            controller: _controller,
-            header: ClassicalHeader(
-              infoColor: AppColors.fontBlack,
-              infoText: 'Update at ${duTimeLineFormat2(DateTime.now())}',
-            ),
-            // onRefresh: () async {
-            //   return true;
-            // },
-            child: SingleChildScrollView(
-              child: Container(
-                color: AppColors.bgGrey,
-                child: Column(
-                  children: <Widget>[
-                    _buildSection(),
-                    _buildSectionDetail(),
-                  ],
+        : Stack(
+            children: <Widget>[
+              Positioned(
+                child: SingleChildScrollView(
+                  controller: scrollController,
+                  padding: EdgeInsets.only(right: duSetWidth(15)),
+                  scrollDirection: Axis.vertical,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: <Widget>[_buildSectionDetail()],
+                  ),
                 ),
               ),
-            ),
+              Positioned(
+                left: 0,
+                child: _buildSection(),
+              ),
+            ],
           );
   }
 }
