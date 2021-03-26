@@ -68,6 +68,8 @@ dependencies:
   easy_dialog: ^1.0.5
   # 骨架屏
   pk_skeleton: ^0.0.2
+  # confirm dialog
+  confirm_dialog: ^1.0.0
 dev_dependencies:
   flutter_test:
     sdk: flutter

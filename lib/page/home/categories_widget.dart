@@ -21,6 +21,7 @@ Widget categoriesWidget({
           horizontal: 8,
         ),
         child: GestureDetector(
+          behavior: HitTestBehavior.opaque,
           child: Text(
             item['name'],
             style: TextStyle(
