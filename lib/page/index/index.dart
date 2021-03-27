@@ -1,8 +1,10 @@
 import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:shuimushequ/common/router/application.dart';
 import 'package:shuimushequ/common/router/index.dart';
+import 'package:shuimushequ/common/utils/authentication.dart';
 import 'package:shuimushequ/page/application/index.dart';
 
 class IndexPage extends StatefulWidget {
@@ -31,6 +33,9 @@ class _IndexPageState extends State<IndexPage> {
       designSize: Size(375, 734), // 812 - 44 - 34 = 734
       allowFontScaling: false,
       builder: () => MaterialApp(
+        builder: (BuildContext context, Widget child) {
+          return FlutterSmartDialog(child: child);
+        },
         title: '水木社区',
         home: Scaffold(body: ApplicationPage()),
         onGenerateRoute: Application.router.generator,

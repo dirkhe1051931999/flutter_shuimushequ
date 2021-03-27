@@ -1,17 +1,17 @@
 // To parse this JSON data, do
 //
-//     final typeLoginResponse = typeLoginResponseFromJson(jsonString);
+//     final typeSearchAccountResponse = typeSearchAccountResponseFromJson(jsonString);
 
 import 'dart:convert';
 
-TypeLoginResponse typeLoginResponseFromJson(String str) =>
-    TypeLoginResponse.fromJson(json.decode(str));
+TypeSearchAccountResponse typeSearchAccountResponseFromJson(String str) =>
+    TypeSearchAccountResponse.fromJson(json.decode(str));
 
-String typeLoginResponseToJson(TypeLoginResponse data) =>
+String typeSearchAccountResponseToJson(TypeSearchAccountResponse data) =>
     json.encode(data.toJson());
 
-class TypeLoginResponse {
-  TypeLoginResponse({
+class TypeSearchAccountResponse {
+  TypeSearchAccountResponse({
     this.code,
     this.data,
     this.kbsCode,
@@ -23,8 +23,8 @@ class TypeLoginResponse {
   int kbsCode;
   String message;
 
-  factory TypeLoginResponse.fromJson(Map<String, dynamic> json) =>
-      TypeLoginResponse(
+  factory TypeSearchAccountResponse.fromJson(Map<String, dynamic> json) =>
+      TypeSearchAccountResponse(
         code: json["code"] == null ? null : json["code"],
         data: json["data"] == null ? null : Data.fromJson(json["data"]),
         kbsCode: json["kbsCode"] == null ? null : json["kbsCode"],
@@ -41,22 +41,34 @@ class TypeLoginResponse {
 
 class Data {
   Data({
-    this.account,
-    this.url,
+    this.total,
+    this.size,
+    this.start,
+    this.accounts,
   });
 
-  Account account;
-  String url;
+  int total;
+  int size;
+  int start;
+  List<Account> accounts;
 
   factory Data.fromJson(Map<String, dynamic> json) => Data(
-        account:
-            json["account"] == null ? null : Account.fromJson(json["account"]),
-        url: json["url"] == null ? null : json["url"],
+        total: json["total"] == null ? null : json["total"],
+        size: json["size"] == null ? null : json["size"],
+        start: json["start"] == null ? null : json["start"],
+        accounts: json["accounts"] == null
+            ? null
+            : List<Account>.from(
+                json["accounts"].map((x) => Account.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
-        "account": account == null ? null : account.toJson(),
-        "url": url == null ? null : url,
+        "total": total == null ? null : total,
+        "size": size == null ? null : size,
+        "start": start == null ? null : start,
+        "accounts": accounts == null
+            ? null
+            : List<dynamic>.from(accounts.map((x) => x.toJson())),
       };
 }
 
@@ -75,6 +87,7 @@ class Account {
     this.createTime,
     this.isBlack,
     this.name,
+    this.isFriend,
     this.id,
     this.k3SUrl,
   });
@@ -92,6 +105,7 @@ class Account {
   int createTime;
   bool isBlack;
   String name;
+  int isFriend;
   String id;
   String k3SUrl;
 
@@ -109,6 +123,7 @@ class Account {
         createTime: json["createTime"] == null ? null : json["createTime"],
         isBlack: json["isBlack"] == null ? null : json["isBlack"],
         name: json["name"] == null ? null : json["name"],
+        isFriend: json["isFriend"] == null ? null : json["isFriend"],
         id: json["id"] == null ? null : json["id"],
         k3SUrl: json["k3sUrl"] == null ? null : json["k3sUrl"],
       );
@@ -127,6 +142,7 @@ class Account {
         "createTime": createTime == null ? null : createTime,
         "isBlack": isBlack == null ? null : isBlack,
         "name": name == null ? null : name,
+        "isFriend": isFriend == null ? null : isFriend,
         "id": id == null ? null : id,
         "k3sUrl": k3SUrl == null ? null : k3SUrl,
       };

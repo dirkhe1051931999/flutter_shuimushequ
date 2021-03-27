@@ -79,7 +79,7 @@ Widget BoxWidget(Function onTap, {bool isSunDay, bool isPictureMode}) {
           "isPictureMode": true,
         })
       : boxs.add({
-          "name": '文字模式',
+          "name": '精简模式',
           "icon": Icon(
             Icons.text_fields,
             color: HexColor('#f86767'),

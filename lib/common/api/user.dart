@@ -1,29 +1,39 @@
 import 'package:flutter/material.dart';
-import 'package:shuimushequ/common/type/index.dart';
+import 'package:shuimushequ/common/type/user/my.dart';
 import 'package:shuimushequ/common/utils/index.dart';
 
-class UserApi {
-  static Future<TypeLoginResponse> login({
+class UserAPI {
+  static Future<dynamic> login({
     @required BuildContext context,
-    TypeLoginRequest params,
+    Map<String, dynamic> params,
   }) async {
     var res = await HttpUtil().post(
-      '/user/login',
-      context: context,
-      params: params,
-    );
-    return TypeLoginResponse.fromJson(res);
-  }
-
-  static Future logout({
-    @required BuildContext context,
-    params,
-  }) async {
-    var res = await HttpUtil().post(
-      '/user/login',
+      '/authorize/sign-in',
       context: context,
       params: params,
     );
     return res;
+  }
+
+  static Future logout({
+    @required BuildContext context,
+    Map<String, dynamic> params,
+  }) async {
+    var res = await HttpUtil().post(
+      '/authorize/sign-out',
+      context: context,
+      params: params,
+    );
+    return res;
+  }
+
+  static Future<TypeMyResponse> mySettings({
+    @required BuildContext context,
+  }) async {
+    var res = await HttpUtil().get(
+      'api/profile/setting/my',
+      context: context,
+    );
+    return TypeMyResponse.fromJson(res);
   }
 }

@@ -4,10 +4,11 @@ import 'package:shuimushequ/common/router/route_handlers.dart';
 
 class Routes {
   static String root = '/';
-  static String signIn = '/signIn';
-  static String signUp = '/signUp';
+  static String login = '/login';
   static String welcome = '/welcome';
   static String detailsPage = '/details/:id';
+  static String imageView = '/imageView';
+  static String search = '/search';
   static void configureRoutes(FluroRouter router) {
     router.notFoundHandler = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) {
@@ -16,5 +17,9 @@ class Routes {
       },
     );
     router.define(root, handler: applicationHandler);
+    router.define(imageView, handler: imageViewHandler);
+    router.define(search, handler: searchPageHandler);
+    router.define(login, handler: loginPageHandler);
+    router.define(welcome, handler: welcomePageHandler);
   }
 }

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:shuimushequ/common/router/application.dart';
 import 'package:shuimushequ/common/utils/index.dart';
 import 'package:shuimushequ/common/values/index.dart';
 import 'package:shuimushequ/common/widgets/index.dart';
+import 'package:shuimushequ/global.dart';
 import 'package:shuimushequ/page/hot/index.dart';
 import 'package:shuimushequ/page/home/index.dart';
 import 'package:shuimushequ/page/discuss/index.dart';
@@ -98,18 +100,15 @@ class _ApplicationPageState extends State<ApplicationPage>
           fontWeight: FontWeight.w600,
         ),
       ),
-      leading: IconButton(
-        icon: Icon(Icons.account_circle),
-        color: AppColors.white,
-        iconSize: duSetFontSize(30),
-        onPressed: () {},
-      ),
+      leading: Text(''),
       actions: <Widget>[
         IconButton(
           icon: Icon(Icons.search),
           color: AppColors.white,
           iconSize: duSetFontSize(30),
-          onPressed: () {},
+          onPressed: () {
+            Application.router.navigateTo(context, '/search');
+          },
         )
       ],
     );
@@ -122,7 +121,7 @@ class _ApplicationPageState extends State<ApplicationPage>
         HomePage(),
         HotPage(),
         MessagePage(),
-        ProfilePage(),
+        Global.isOfflineLogin ? ProfilePage() : Container(),
         TestPage(),
       ],
       controller: _pageController,
@@ -151,6 +150,10 @@ class _ApplicationPageState extends State<ApplicationPage>
 
   void _handlePageChanged(int page) {
     setState(() {
+      if (page == 3 && !Global.isOfflineLogin) {
+        Application.router.navigateTo(context, '/login');
+        return;
+      }
       this._page = page;
     });
   }

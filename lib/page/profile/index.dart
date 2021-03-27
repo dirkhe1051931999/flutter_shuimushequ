@@ -1,7 +1,10 @@
 import 'package:confirm_dialog/confirm_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shuimushequ/common/api/index.dart';
 import 'package:shuimushequ/common/provider/index.dart';
+import 'package:shuimushequ/common/router/application.dart';
+import 'package:shuimushequ/common/utils/authentication.dart';
 import 'package:shuimushequ/page/profile/box_widget.dart';
 import 'package:shuimushequ/page/profile/link_widget.dart';
 import 'package:shuimushequ/page/profile/user_widget.dart';
@@ -39,7 +42,6 @@ class _ProfilePageState extends State<ProfilePage> {
 
   Widget _buildLinkWidget() {
     return LinkWidget((item) async {
-      print(item);
       if (item['route'] == null) {
         if (await confirm(
           context,
@@ -48,15 +50,17 @@ class _ProfilePageState extends State<ProfilePage> {
           textOK: Text('确定'),
           textCancel: Text('取消'),
         )) {
-          return print('pressedOK');
+          await UserAPI.logout(
+            context: context,
+            params: {"t": DateTime.now().microsecondsSinceEpoch},
+          );
+          deleteAuthentication();
+          Application.router.navigateTo(context, '/login');
+          return;
         }
         return print('pressedCancel');
       }
     });
-  }
-
-  Widget _buildLogout() {
-    return ElevatedButton(onPressed: () => 0, child: Text('button'));
   }
 
   @override
@@ -73,7 +77,6 @@ class _ProfilePageState extends State<ProfilePage> {
             isPictureMode: _appState.isPictureMode,
           ),
           _buildLinkWidget(),
-          // _buildLogout(),
         ],
       ),
     );

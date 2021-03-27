@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shuimushequ/common/type/home/album_post.dart';
 import 'package:shuimushequ/common/type/home/categories.dart';
 import 'package:shuimushequ/common/type/home/post.dart';
 import 'package:shuimushequ/common/utils/index.dart';
@@ -11,7 +12,7 @@ class CommunityAPI {
     Map<String, dynamic> params,
   }) async {
     var res = await HttpUtil().get(
-      'profile/navigation',
+      'api/profile/navigation',
       context: context,
       refresh: refresh,
       cacheDisk: cacheDisk,
@@ -32,7 +33,7 @@ class CommunityAPI {
     var res;
     if (tabName == 'global' /*热帖*/) {
       res = await HttpUtil().get(
-        'hot/global',
+        'api/hot/global',
         context: context,
         refresh: refresh,
         cacheDisk: cacheDisk,
@@ -54,7 +55,7 @@ class CommunityAPI {
       param.addAll(params);
       param.addAll(channel);
       res = await HttpUtil().get(
-        'channel/loadTopics',
+        'api/channel/loadTopics',
         context: context,
         refresh: refresh,
         cacheDisk: cacheDisk,
@@ -63,5 +64,24 @@ class CommunityAPI {
     }
     return TypePostResponse.fromJson(res);
   }
+
   // 图览-post
+  static Future<TypeAlbumPostResponse> getAlbumPostList({
+    @required BuildContext context,
+    @required String tabName,
+    @required String tabId,
+    bool refresh = false,
+    bool cacheDisk = false,
+    Map<String, dynamic> params,
+  }) async {
+    var res;
+    res = await HttpUtil().get(
+      'api/album/load/global',
+      context: context,
+      refresh: refresh,
+      cacheDisk: cacheDisk,
+      params: params,
+    );
+    return TypeAlbumPostResponse.fromJson(res);
+  }
 }
