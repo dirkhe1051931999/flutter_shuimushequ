@@ -12,7 +12,7 @@ class DiscussAPI {
     Map<String, dynamic> params,
   }) async {
     var res = await HttpUtil().get(
-      'section/all',
+      'api/section/all',
       context: context,
       refresh: refresh,
       cacheDisk: cacheDisk,
@@ -29,7 +29,7 @@ class DiscussAPI {
     Map<String, dynamic> params,
   }) async {
     var res = await HttpUtil().get(
-      'section/subs',
+      'api/section/subs',
       context: context,
       refresh: refresh,
       cacheDisk: cacheDisk,

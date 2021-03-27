@@ -12,7 +12,7 @@ class HotAPI {
     Map<String, dynamic> params,
   }) async {
     var res = await HttpUtil().get(
-      'hot/popularity/board',
+      'api/hot/popularity/board',
       context: context,
       refresh: refresh,
       cacheDisk: cacheDisk,
@@ -29,7 +29,7 @@ class HotAPI {
     Map<String, dynamic> params,
   }) async {
     var res = await HttpUtil().get(
-      'hot/ten',
+      'api/hot/ten',
       context: context,
       refresh: refresh,
       cacheDisk: cacheDisk,

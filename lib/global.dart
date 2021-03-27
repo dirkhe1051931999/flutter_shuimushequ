@@ -5,12 +5,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:package_info/package_info.dart';
 import 'package:shuimushequ/common/provider/index.dart';
+import 'package:shuimushequ/common/utils/authentication.dart';
 import 'package:shuimushequ/common/utils/index.dart';
 import 'package:shuimushequ/common/values/index.dart';
 
 class Global {
   // 用户信息
-  static Map profile = {"accessToken": null};
+  static Map profile = {
+    'sign-time': 0,
+    "set_identity": null,
+    "kbs-info": null,
+    "kbs-key": null
+  };
 
   /// 发布渠道
   static String channel = "xiaomi";
@@ -54,6 +60,8 @@ class Global {
     if (_profileJSON != null) {
       profile = _profileJSON;
       isOfflineLogin = true;
+    } else {
+      deleteAuthentication();
     }
     //  android 状态栏为透明的沉浸
     if (Platform.isAndroid) {
@@ -76,6 +84,7 @@ class Global {
   // 持久化用户信息
   static Future<bool> saveProfile(userRes) {
     profile = userRes;
-    return StorageUtil().setJSON(STORAGE_USER_PROFILE_KEY, userRes.toJson());
+    Global.isOfflineLogin = true;
+    return StorageUtil().setJSON(STORAGE_USER_PROFILE_KEY, userRes);
   }
 }

@@ -5,12 +5,17 @@ import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:provider/provider.dart';
 import 'package:shuimushequ/common/api/index.dart';
 import 'package:shuimushequ/common/provider/index.dart';
+import 'package:shuimushequ/common/router/application.dart';
+import 'package:shuimushequ/common/type/home/album_post.dart';
 import 'package:shuimushequ/common/type/home/categories.dart';
 import 'package:shuimushequ/common/type/home/post.dart';
+import 'package:shuimushequ/common/type/user/my.dart';
 import 'package:shuimushequ/common/utils/date.dart';
 import 'package:shuimushequ/common/utils/index.dart';
 import 'package:shuimushequ/common/values/index.dart';
 import 'package:shuimushequ/common/widgets/index.dart';
+import 'package:shuimushequ/global.dart';
+import 'package:shuimushequ/page/home/album_post_widget.dart';
 import 'package:shuimushequ/page/home/categories_widget.dart';
 import 'package:shuimushequ/page/home/post_widget.dart';
 
@@ -31,6 +36,7 @@ class _HomePageState extends State<HomePage>
   int pageNum = 1;
   AppState _appState;
   TypeCategoriesResponse _categories;
+  TypeAlbumPostResponse _albumPostList;
   TypePostResponse _postList;
   EasyRefreshController _controller;
   @override
@@ -55,24 +61,46 @@ class _HomePageState extends State<HomePage>
 
   _loadAllData() async {
     _categories = await CommunityAPI.getCategories(context: context);
-    _postList = await CommunityAPI.getPostList(
-      tabName: _categoriesType,
-      tabId: _categoriesId,
-      context: context,
-      params: {"page": pageNum, "size": pageSize},
-    );
+    if (_categoriesType == 'album') {
+      _albumPostList = await CommunityAPI.getAlbumPostList(
+        tabName: _categoriesType,
+        tabId: _categoriesId,
+        context: context,
+        params: {"page": pageNum, "size": pageSize},
+      );
+    } else {
+      _postList = await CommunityAPI.getPostList(
+        tabName: _categoriesType,
+        tabId: _categoriesId,
+        context: context,
+        params: {"page": pageNum, "size": pageSize},
+      );
+    }
+    if (Global.isOfflineLogin) {
+      TypeMyResponse res = await UserAPI.mySettings(context: context);
+      print(res.toJson());
+    }
     if (mounted) {
       setState(() {});
     }
   }
 
   _loadNewData() async {
-    _postList = await CommunityAPI.getPostList(
-      tabName: _categoriesType,
-      tabId: _categoriesId,
-      context: context,
-      params: {"page": pageNum, "size": pageSize},
-    );
+    if (_categoriesType == 'album') {
+      _albumPostList = await CommunityAPI.getAlbumPostList(
+        tabName: _categoriesType,
+        tabId: _categoriesId,
+        context: context,
+        params: {"page": pageNum, "size": pageSize},
+      );
+    } else {
+      _postList = await CommunityAPI.getPostList(
+        tabName: _categoriesType,
+        tabId: _categoriesId,
+        context: context,
+        params: {"page": pageNum, "size": pageSize},
+      );
+    }
     if (mounted) {
       setState(() {});
     }
@@ -94,16 +122,38 @@ class _HomePageState extends State<HomePage>
   }
 
   Widget _buildPosts() {
-    return _postList == null
-        ? Container()
-        : postWidget(
-            posts: _postList,
-            categoriesType: _categoriesType,
-            categoriesId: _categoriesId,
-            onTap: (item) {
-              print(item);
-            },
-          );
+    if (_categoriesType == 'album') {
+      return _albumPostList == null
+          ? Container()
+          : albumPostWidget(
+              posts: _albumPostList,
+              onTapImage: (index, images) {
+                _appState.setImageViewCurrentIndex(index);
+                _appState.setImageViewAllData(images);
+                Application.router.navigateTo(context, '/imageView');
+              },
+              onTapPost: (item) {
+                print(item);
+              },
+            );
+    } else {
+      return _postList == null
+          ? Container()
+          : postWidget(
+              posts: _postList,
+              isPictureMode: _appState.isPictureMode,
+              categoriesType: _categoriesType,
+              categoriesId: _categoriesId,
+              onTap: (item) {
+                print(item);
+              },
+              onTapImage: (index, images) {
+                _appState.setImageViewCurrentIndex(index);
+                _appState.setImageViewAllData(images);
+                Application.router.navigateTo(context, '/imageView');
+              },
+            );
+    }
   }
 
   @override

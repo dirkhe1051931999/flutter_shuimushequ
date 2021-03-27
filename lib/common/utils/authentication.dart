@@ -11,10 +11,16 @@ Future<bool> isAuthenticated() async {
 
 Future deleteAuthentication() async {
   await StorageUtil().remove(STORAGE_USER_PROFILE_KEY);
-  Global.profile = null;
+  Global.profile = {
+    "sign-time": 0,
+    "set_identity": null,
+    "kbs-info": null,
+    "kbs-key": null,
+  };
+  Global.isOfflineLogin = false;
 }
 
 Future goLoginPage(BuildContext context) async {
   await deleteAuthentication();
-  Application.router.navigateTo(context, '/signIn');
+  Application.router.navigateTo(context, '/login');
 }

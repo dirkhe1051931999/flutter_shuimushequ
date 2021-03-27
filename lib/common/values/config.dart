@@ -20,10 +20,10 @@ const String STORAGE_HOT_POST_CACHE_KEY = 'cache_hot_post';
 const String STORAGE_DISCUSS_CACHE_KEY = 'cache_discuss_post';
 
 /// Server baseurl
-const SERVER_API_URL = 'https://wap.newsmth.net/wap/api/';
+const SERVER_API_URL = 'https://wap.newsmth.net/wap/';
 
 /// 是否启用代理
-const PROXY_ENABLE = false;
+const PROXY_ENABLE = true;
 
 /// 代理服务IP
 const PROXY_IP = '10.18.2.204';

@@ -9,6 +9,8 @@ Widget inputTextEdit({
   String hintText,
   bool isPassword = false,
   double marginTop = 15,
+  Function submit,
+  FocusNode focusNode,
 }) {
   return Container(
     height: duSetHeight(44),
@@ -18,6 +20,7 @@ Widget inputTextEdit({
       borderRadius: Radii.k6pxRadius,
     ),
     child: TextField(
+      focusNode: focusNode,
       controller: controller,
       keyboardType: keyboardType,
       decoration: InputDecoration(
@@ -33,7 +36,8 @@ Widget inputTextEdit({
       ),
       maxLines: 1,
       autocorrect: false, // 自动纠正
-      obscureText: isPassword, // 隐藏输入内容, 密码框
+      obscureText: isPassword,
+      onSubmitted: (value) => submit(value), // 隐藏输入内容, 密码框
     ),
   );
 }

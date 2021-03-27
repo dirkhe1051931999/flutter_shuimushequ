@@ -221,11 +221,23 @@ class HttpUtil {
 
   /// 读取本地配置
   Map<String, dynamic> getAuthorizationHeader() {
-    var headers;
-    String accessToken = Global.profile['accessToken'];
-    if (accessToken != null) {
+    Map<String, dynamic> headers;
+    int now = DateTime.now().millisecondsSinceEpoch;
+    int signTime = Global.profile['sign-time'];
+    // 2505600000ms=>29天
+
+    if (now > (signTime + 2505600000)) {
+      // 29天cookie 过期
+      deleteAuthentication();
+    }
+    String kbsKey = Global.profile['kbs-key'];
+    String kbsInfo = Global.profile['kbs-info'];
+    String setIdentity = Global.profile['set_identity'];
+    if (setIdentity != null && kbsKey != null && kbsInfo != null) {
       headers = {
         'Authorization': 'Basic Og==',
+        "cookie":
+            "kbs-key=$kbsKey; kbs-info=$kbsInfo;set_identity=${Uri.encodeFull(setIdentity)}",
       };
     }
     return headers;
@@ -257,6 +269,7 @@ class HttpUtil {
         "cacheKey": cacheKey,
         "cacheDisk": cacheDisk,
       });
+
       Map<String, dynamic> _authorization = getAuthorizationHeader();
       if (_authorization != null) {
         requestOptions = requestOptions.merge(headers: _authorization);
@@ -277,7 +290,7 @@ class HttpUtil {
   Future post(
     String path, {
     @required BuildContext context,
-    dynamic params,
+    Map<String, dynamic> params,
     Options options,
     CancelToken cancelToken,
     bool refresh = false,
@@ -300,14 +313,17 @@ class HttpUtil {
       if (_authorization != null) {
         requestOptions = requestOptions.merge(headers: _authorization);
       }
-      FormData data = FormData.fromMap({'data': params});
+      FormData data = FormData.fromMap(params);
       var response = await dio.post(
         path,
         data: data,
         options: requestOptions,
         cancelToken: cancelToken,
       );
-      return (response.data);
+      return {
+        "data": response.data,
+        "headers": response.headers,
+      };
     } on DioError catch (e) {
       throw createErrorEntity(e);
     }
