@@ -174,6 +174,7 @@ class _ApplicationPageState extends State<ApplicationPage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: _buildAppbar(),
       body: _buildBody(),
       bottomNavigationBar: _buildBottomNavigationbar(),

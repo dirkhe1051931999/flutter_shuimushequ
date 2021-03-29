@@ -133,7 +133,8 @@ class _HomePageState extends State<HomePage>
                 Application.router.navigateTo(context, '/imageView');
               },
               onTapPost: (item) {
-                print(item);
+                Application.router
+                    .navigateTo(context, '/post_details/${item['id']}');
               },
             );
     } else {
@@ -145,7 +146,8 @@ class _HomePageState extends State<HomePage>
               categoriesType: _categoriesType,
               categoriesId: _categoriesId,
               onTap: (item) {
-                print(item);
+                Application.router
+                    .navigateTo(context, '/post_details/${item['id']}');
               },
               onTapImage: (index, images) {
                 _appState.setImageViewCurrentIndex(index);
