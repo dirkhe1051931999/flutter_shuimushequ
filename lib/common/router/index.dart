@@ -6,7 +6,7 @@ class Routes {
   static String root = '/';
   static String login = '/login';
   static String welcome = '/welcome';
-  static String detailsPage = '/details/:id';
+  static String postDetailsPage = '/post_details/:id';
   static String imageView = '/imageView';
   static String search = '/search';
   static void configureRoutes(FluroRouter router) {
@@ -21,5 +21,6 @@ class Routes {
     router.define(search, handler: searchPageHandler);
     router.define(login, handler: loginPageHandler);
     router.define(welcome, handler: welcomePageHandler);
+    router.define(postDetailsPage, handler: postDetailPageHandler);
   }
 }

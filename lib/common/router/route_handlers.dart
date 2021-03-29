@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:shuimushequ/common/widgets/index.dart';
 import 'package:shuimushequ/page/application/index.dart';
 import 'package:shuimushequ/page/login/index.dart';
+import 'package:shuimushequ/page/post_details/index.dart';
 import 'package:shuimushequ/page/search/index.dart';
 import 'package:shuimushequ/page/welcome/index.dart';
 
@@ -29,5 +30,13 @@ Handler welcomePageHandler = Handler(
 Handler loginPageHandler = Handler(
   handlerFunc: (BuildContext context, Map<String, dynamic> params) {
     return LoginPage();
+  },
+);
+Handler postDetailPageHandler = Handler(
+  handlerFunc: (BuildContext context, Map<String, dynamic> params) {
+    String id = params["id"][0];
+    return PostDetailPage(
+      id: id,
+    );
   },
 );
