@@ -11,6 +11,7 @@ Widget imageCached({
   String url,
   double width = 48,
   double height = 48,
+  bool defaultImage = true,
   EdgeInsetsGeometry margin,
 }) {
   return Container(
@@ -19,24 +20,29 @@ Widget imageCached({
     ),
     child: ClipRRect(
       borderRadius: Radii.k6pxRadius,
-      child: new FadeInImage.assetNetwork(
-        height: duSetHeight(height),
-        width: duSetWidth(width),
-        placeholder: 'assets/images/placeholder.jpeg',
-        image: url,
-        alignment: Alignment.center,
-        fit: BoxFit.cover,
-        imageErrorBuilder: (context, error, stackTrace) => Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.error,
+      child: defaultImage
+          ? FadeInImage.assetNetwork(
+              height: duSetHeight(height),
+              width: duSetWidth(width),
+              placeholder: 'assets/images/placeholder.png',
+              image: url,
+              alignment: Alignment.center,
+              fit: BoxFit.cover,
+              imageErrorBuilder: (context, error, stackTrace) {
+                return Image.asset('assets/images/placeholder.png');
+              },
+              fadeInDuration: Duration(seconds: 1),
+            )
+          : FadeInImage.assetNetwork(
+              placeholder: 'assets/images/placeholder.png',
+              image: url,
+              alignment: Alignment.center,
+              fit: BoxFit.cover,
+              imageErrorBuilder: (context, error, stackTrace) {
+                return Image.asset('assets/images/placeholder.png');
+              },
+              fadeInDuration: Duration(seconds: 1),
             ),
-          ],
-        ),
-        fadeInDuration: Duration(seconds: 1),
-      ),
     ),
   );
 }
@@ -55,9 +61,8 @@ class _ImageViewPageState extends State<ImageViewPage> {
   int currentIndex = 0;
 
   void onPageChanged(int index) {
-    setState(() {
-      _appState.setImageViewCurrentIndex(index);
-    });
+    _appState.setImageViewCurrentIndex(index);
+    setState(() {});
   }
 
   @override
@@ -65,6 +70,7 @@ class _ImageViewPageState extends State<ImageViewPage> {
     _appState = Provider.of<AppState>(context);
     List galleryItems = _appState.imageViewAllData;
     currentIndex = _appState.imageViewCurrentIndex;
+    initialIndex = _appState.imageViewCurrentIndex;
     return Stack(
       children: <Widget>[
         PhotoViewGallery.builder(
@@ -96,7 +102,7 @@ class _ImageViewPageState extends State<ImageViewPage> {
             ),
           ),
           backgroundDecoration: const BoxDecoration(
-            color: AppColors.fontBlack,
+            color: Color(0x90000000),
           ),
           pageController: PageController(initialPage: initialIndex),
           onPageChanged: onPageChanged,

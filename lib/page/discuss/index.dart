@@ -1,15 +1,10 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
-import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:provider/provider.dart';
 import 'package:shuimushequ/common/api/discuss.dart';
 import 'package:shuimushequ/common/provider/index.dart';
 import 'package:shuimushequ/common/type/discuss/section.dart';
 import 'package:shuimushequ/common/type/discuss/section_detail.dart';
-import 'package:shuimushequ/common/utils/date.dart';
 import 'package:shuimushequ/common/utils/index.dart';
-import 'package:shuimushequ/common/values/index.dart';
 import 'package:shuimushequ/common/widgets/index.dart';
 import 'package:shuimushequ/page/discuss/section_detail_widget.dart';
 import 'package:shuimushequ/page/discuss/section_widget.dart';

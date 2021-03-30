@@ -30,88 +30,92 @@ Widget albumPostWidget(
           horizontal: duSetWidth(15),
           vertical: duSetHeight(5),
         ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: <Widget>[
-            Padding(
-              padding: EdgeInsets.only(bottom: duSetHeight(10)),
-              child: Text(
-                item['subject'],
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                textAlign: TextAlign.left,
-                style: TextStyle(
-                  fontSize: duSetFontSize(17),
-                  fontFamily: 'Montserrat',
-                  color: AppColors.fontBlack,
-                  height: 1.2,
+        child: GestureDetector(
+          behavior: HitTestBehavior.opaque,
+          onTap: () => onTapPost(item),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: <Widget>[
+              Padding(
+                padding: EdgeInsets.only(bottom: duSetHeight(10)),
+                child: Text(
+                  item['subject'],
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  textAlign: TextAlign.left,
+                  style: TextStyle(
+                    fontSize: duSetFontSize(17),
+                    fontFamily: 'Montserrat',
+                    color: AppColors.fontBlack,
+                    height: 1.2,
+                  ),
                 ),
               ),
-            ),
-            Wrap(
-              spacing: duSetWidth(4),
-              runSpacing: duSetHeight(5),
-              alignment: WrapAlignment.start,
-              runAlignment: WrapAlignment.center,
-              children: _albums,
-            ),
-            Padding(
-              padding: EdgeInsets.only(top: duSetHeight(10)),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: <Widget>[
-                  ClipRRect(
-                    borderRadius: Radii.k6pxRadius,
-                    child: Image.network(
-                      userAvatar + '?w=80&h=80',
-                      width: duSetWidth(16),
-                      height: duSetHeight(16),
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(
-                      left: duSetWidth(
-                        5,
-                      ),
-                    ),
-                    child: Text(
-                      username,
-                      style: TextStyle(
-                        fontSize: duSetFontSize(14),
-                        fontFamily: 'Montserrat',
-                        color: AppColors.fontBlack,
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(
-                      left: duSetWidth(30),
-                    ),
-                    child: Text(
-                      ("${duTimeLineFormat(postTime)}"),
-                      style: TextStyle(
-                        fontSize: duSetFontSize(14),
-                        fontFamily: 'Montserrat',
-                        color: AppColors.subGrey,
-                      ),
-                    ),
-                  ),
-                  Spacer(),
-                  Text(
-                    item['board']['title'],
-                    style: TextStyle(
-                      fontSize: duSetFontSize(14),
-                      fontFamily: 'Montserrat',
-                      color: AppColors.fontBlue,
-                    ),
-                  )
-                ],
+              Wrap(
+                spacing: duSetWidth(4),
+                runSpacing: duSetHeight(5),
+                alignment: WrapAlignment.start,
+                runAlignment: WrapAlignment.center,
+                children: _albums,
               ),
-            ),
-          ],
+              Padding(
+                padding: EdgeInsets.only(top: duSetHeight(10)),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: <Widget>[
+                    ClipRRect(
+                      borderRadius: Radii.k6pxRadius,
+                      child: Image.network(
+                        'http://ks3-cn-beijing.ksyun.com/avatar/5db15e1d27ad0ccaa79a6b856fbe9c5f?w=80&h=80',
+                        width: duSetWidth(16),
+                        height: duSetHeight(16),
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(
+                        left: duSetWidth(
+                          5,
+                        ),
+                      ),
+                      child: Text(
+                        username,
+                        style: TextStyle(
+                          fontSize: duSetFontSize(14),
+                          fontFamily: 'Montserrat',
+                          color: AppColors.fontBlack,
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(
+                        left: duSetWidth(30),
+                      ),
+                      child: Text(
+                        ("${duTimeLineFormat(postTime)}"),
+                        style: TextStyle(
+                          fontSize: duSetFontSize(14),
+                          fontFamily: 'Montserrat',
+                          color: AppColors.subGrey,
+                        ),
+                      ),
+                    ),
+                    Spacer(),
+                    Text(
+                      item['board']['title'],
+                      style: TextStyle(
+                        fontSize: duSetFontSize(14),
+                        fontFamily: 'Montserrat',
+                        color: AppColors.fontBlue,
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

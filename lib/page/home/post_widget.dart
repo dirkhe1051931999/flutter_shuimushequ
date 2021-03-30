@@ -13,7 +13,6 @@ Widget postWidget({
   Function onTap,
   Function onTapImage,
 }) {
-  // print(posts.);
   List adList = posts.data.toJson()['adList'];
   List topics = posts.data.toJson()['topics'];
   List<Widget> _posts = [];
@@ -53,23 +52,27 @@ Widget postWidget({
                 alignment: WrapAlignment.start,
                 runAlignment: WrapAlignment.center,
                 children: [
-                  Text(
-                    item['subject'],
-                    textAlign: TextAlign.left,
-                    maxLines: 2,
-                    style: TextStyle(
-                      fontSize: duSetFontSize(17),
-                      fontFamily: 'Montserrat',
-                      color: AppColors.fontBlack,
+                  RichText(
+                    text: TextSpan(
+                      text: item['subject'],
+                      style: TextStyle(
+                        fontSize: duSetFontSize(17),
+                        fontFamily: 'Montserrat',
+                        color: AppColors.fontBlack,
+                      ),
+                      children: [
+                        if (!isPictureMode &&
+                            item['article']['attachments'].length != 0)
+                          WidgetSpan(
+                            child: Icon(
+                              Icons.image_sharp,
+                              size: duSetFontSize(20),
+                              color: AppColors.fontBlue,
+                            ),
+                          )
+                      ],
                     ),
                   ),
-                  if (!isPictureMode &&
-                      item['article']['attachments'].length != 0)
-                    Icon(
-                      Icons.image_sharp,
-                      size: duSetFontSize(20),
-                      color: AppColors.fontBlue,
-                    )
                 ],
               ),
               if (isPictureMode && item['article']['attachments'].length == 0)

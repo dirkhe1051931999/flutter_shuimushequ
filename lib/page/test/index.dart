@@ -1,9 +1,6 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:photo_view/photo_view.dart';
-import 'package:photo_view/photo_view_gallery.dart';
-import 'package:shuimushequ/common/router/application.dart';
 
 class TestPage extends StatefulWidget {
   TestPage({Key key}) : super(key: key);
@@ -85,14 +82,15 @@ class _TestPageState extends State<TestPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(title: Text("标题")),
-        body: CustomScrollView(
-          slivers: <Widget>[
-            _buildBanner(),
-            _buildStickyBar(),
-            _buildList(),
-          ],
-        ));
+      appBar: AppBar(title: Text("标题")),
+      body: CustomScrollView(
+        slivers: <Widget>[
+          _buildBanner(),
+          _buildStickyBar(),
+          _buildList(),
+        ],
+      ),
+    );
   }
 }
 
