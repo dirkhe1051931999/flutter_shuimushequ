@@ -23,7 +23,7 @@ const String STORAGE_DISCUSS_CACHE_KEY = 'cache_discuss_post';
 const SERVER_API_URL = 'https://wap.newsmth.net/wap/';
 
 /// 是否启用代理
-const PROXY_ENABLE = false;
+const PROXY_ENABLE = true;
 
 /// 代理服务IP
 const PROXY_IP = '10.18.2.204';

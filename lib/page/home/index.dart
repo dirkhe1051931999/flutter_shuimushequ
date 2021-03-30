@@ -1,7 +1,9 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
+import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:provider/provider.dart';
 import 'package:shuimushequ/common/api/index.dart';
 import 'package:shuimushequ/common/provider/index.dart';
@@ -39,11 +41,25 @@ class _HomePageState extends State<HomePage>
   TypeAlbumPostResponse _albumPostList;
   TypePostResponse _postList;
   EasyRefreshController _controller;
+  ScrollController _customScrollViewController = ScrollController();
+  bool isRefreshing = false;
+  bool isNoMoreData = false;
+  bool isMoreDataing = false;
   @override
   void initState() {
     super.initState();
     print('home init');
     _controller = EasyRefreshController();
+    _customScrollViewController.addListener(() {
+      if (_customScrollViewController.position.pixels ==
+              _customScrollViewController.position.maxScrollExtent &&
+          !isRefreshing &&
+          !isNoMoreData &&
+          !isMoreDataing) {
+        pageNum++;
+        _loadMoreData();
+      }
+    });
     _loadAllData();
     _loadLatestWithDiskCache();
   }
@@ -106,6 +122,37 @@ class _HomePageState extends State<HomePage>
     }
   }
 
+  _loadMoreData() async {
+    SmartDialog.showLoading();
+    isMoreDataing = true;
+    if (_categoriesType == 'album') {
+      TypeAlbumPostResponse more;
+      more = await CommunityAPI.getAlbumPostList(
+        tabName: _categoriesType,
+        tabId: _categoriesId,
+        context: context,
+        params: {"page": pageNum, "size": pageSize},
+      );
+      _albumPostList.data.articles.addAll(more.data.articles);
+      SmartDialog.dismiss();
+      isMoreDataing = false;
+    } else {
+      TypePostResponse more;
+      more = await CommunityAPI.getPostList(
+        tabName: _categoriesType,
+        tabId: _categoriesId,
+        context: context,
+        params: {"page": pageNum, "size": pageSize},
+      );
+      _postList.data.topics.addAll(more.data.topics);
+      SmartDialog.dismiss();
+      isMoreDataing = false;
+    }
+    if (mounted) {
+      setState(() {});
+    }
+  }
+
   Widget _buildCategories() {
     return _categories == null
         ? Container()
@@ -113,10 +160,15 @@ class _HomePageState extends State<HomePage>
             categories: _categories,
             categoriesType: _categoriesType,
             categoriesId: _categoriesId,
-            onTap: (item) {
+            onTap: (item) async {
               _categoriesType = item['type'];
               _categoriesId = item['id'];
-              _loadNewData();
+              pageNum = 1;
+              _customScrollViewController
+                  .jumpTo(_customScrollViewController.position.minScrollExtent);
+              SmartDialog.showLoading();
+              await _loadNewData();
+              SmartDialog.dismiss();
             },
           );
   }
@@ -134,7 +186,7 @@ class _HomePageState extends State<HomePage>
               },
               onTapPost: (item) {
                 Application.router
-                    .navigateTo(context, '/post_details/${item['id']}');
+                    .navigateTo(context, '/post_details/${item['topicId']}');
               },
             );
     } else {
@@ -158,6 +210,32 @@ class _HomePageState extends State<HomePage>
     }
   }
 
+  Widget _buildStickyBar() {
+    return SliverPersistentHeader(
+      pinned: true, //是否固定在顶部
+      floating: true,
+      delegate: _SliverAppBarDelegate(
+          minHeight: 50, //收起的高度
+          maxHeight: 50, //展开的最大高度
+          child: Container(
+            padding: EdgeInsets.symmetric(horizontal: duSetWidth(15)),
+            color: AppColors.white,
+            alignment: Alignment.centerLeft,
+            child: _buildCategories(),
+          )),
+    );
+  }
+
+  Widget _buildList() {
+    return SliverList(
+        delegate: SliverChildBuilderDelegate(
+      (context, index) {
+        return _buildPosts();
+      },
+      childCount: 1,
+    ));
+  }
+
   @override
   Widget build(BuildContext context) {
     _appState = Provider.of<AppState>(context);
@@ -171,17 +249,51 @@ class _HomePageState extends State<HomePage>
               infoColor: AppColors.fontBlack,
               infoText: 'Update at ${duTimeLineFormat2(DateTime.now())}',
             ),
-            // onRefresh: () async {
-            //   return true;
-            // },
-            child: SingleChildScrollView(
-              child: Column(
-                children: <Widget>[
-                  _buildCategories(),
-                  _buildPosts(),
-                ],
-              ),
+            onRefresh: () async {
+              pageNum = 1;
+              isRefreshing = true;
+              await _loadNewData();
+              _controller.finishRefresh();
+              isRefreshing = false;
+            },
+            child: CustomScrollView(
+              controller: _customScrollViewController,
+              slivers: <Widget>[
+                _buildStickyBar(),
+                _buildList(),
+              ],
             ),
           );
+  }
+}
+
+class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
+  _SliverAppBarDelegate({
+    @required this.minHeight,
+    @required this.maxHeight,
+    @required this.child,
+  });
+
+  final double minHeight;
+  final double maxHeight;
+  final Widget child;
+
+  @override
+  double get minExtent => minHeight;
+
+  @override
+  double get maxExtent => max(maxHeight, minHeight);
+
+  @override
+  Widget build(
+      BuildContext context, double shrinkOffset, bool overlapsContent) {
+    return new SizedBox.expand(child: child);
+  }
+
+  @override
+  bool shouldRebuild(_SliverAppBarDelegate oldDelegate) {
+    return maxHeight != oldDelegate.maxHeight ||
+        minHeight != oldDelegate.minHeight ||
+        child != oldDelegate.child;
   }
 }

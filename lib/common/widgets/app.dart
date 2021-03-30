@@ -22,10 +22,12 @@ Widget blueAppBar({
   @required BuildContext context,
   Widget title,
   Widget leading,
+  bool centerTitle = false,
   List<Widget> actions,
 }) {
   return AppBar(
     backgroundColor: AppColors.bgBlue,
+    centerTitle: centerTitle,
     elevation: 0,
     title: title,
     leading: leading,
@@ -44,4 +46,8 @@ Widget cardProfileSkeleton() {
     isCircularImage: true,
     isBottomLinesActive: true,
   );
+}
+
+Widget postContentLoading() {
+  return Image.asset('assets/images/loading.gif');
 }

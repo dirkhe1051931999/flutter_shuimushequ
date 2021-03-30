@@ -91,6 +91,7 @@ class _ApplicationPageState extends State<ApplicationPage>
   Widget _buildAppbar() {
     return blueAppBar(
       context: context,
+      centerTitle: true,
       title: Text(
         _tabTitles[_page],
         style: TextStyle(
@@ -100,7 +101,9 @@ class _ApplicationPageState extends State<ApplicationPage>
           fontWeight: FontWeight.w600,
         ),
       ),
-      leading: Text(''),
+      leading: Image.asset(
+        'assets/images/logo.png',
+      ),
       actions: <Widget>[
         IconButton(
           icon: Icon(Icons.search),

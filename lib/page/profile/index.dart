@@ -25,7 +25,6 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget _buildBoxWidget({bool isSunDay, bool isPictureMode}) {
     return BoxWidget(
       (item) {
-        print(item);
         if (item['route'] == null) {
           if (item['isPictureMode'] != null) {
             _appState.switchPictureMode();
