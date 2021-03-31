@@ -19,8 +19,8 @@ Widget postAccountWidget(
         borderRadius: Radii.k10pxRadius,
         child: Image.network(
           userAvatar + '?w=80&h=80',
-          width: duSetWidth(28),
-          height: duSetHeight(28),
+          width: duSetWidth(18),
+          height: duSetHeight(18),
         ),
       ),
       Padding(
@@ -30,7 +30,7 @@ Widget postAccountWidget(
         child: Text(
           name,
           style: TextStyle(
-            fontSize: duSetFontSize(16),
+            fontSize: duSetFontSize(12),
             fontFamily: 'Montserrat',
             color: AppColors.fontBlack,
           ),
@@ -40,7 +40,7 @@ Widget postAccountWidget(
       Text(
         ("${duTimeLineFormat(postTime)}"),
         style: TextStyle(
-          fontSize: duSetFontSize(14),
+          fontSize: duSetFontSize(12),
           fontFamily: 'Avenir',
           color: AppColors.subGrey,
         ),

@@ -54,7 +54,7 @@ class _maskPageState extends State<maskPage> {
               child: TextField(
                 controller: _textController,
                 autofocus: true,
-                style: TextStyle(fontSize: duSetFontSize(16)),
+                style: TextStyle(fontSize: duSetFontSize(14)),
                 //设置键盘按钮为发送
                 textInputAction: TextInputAction.send,
                 keyboardType: TextInputType.multiline,
