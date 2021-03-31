@@ -21,7 +21,7 @@ Widget postContentWidget(TypePostDetailsResponse post, {Function onTapImage}) {
         child: Text(
           content[i],
           style: TextStyle(
-            fontSize: duSetFontSize(21),
+            fontSize: duSetFontSize(14),
             fontFamily: 'Montserrat',
             color: AppColors.fontBlack,
             height: 1.6,
@@ -55,7 +55,11 @@ Widget postContentWidget(TypePostDetailsResponse post, {Function onTapImage}) {
         .add(albumWidget(attachments[i], (item) => onTapImage(attachments, i)));
   }
   return Container(
-    padding: EdgeInsets.only(top: duSetHeight(20)),
+    padding: EdgeInsets.only(
+      top: duSetHeight(20),
+      left: duSetWidth(15),
+      right: duSetWidth(15),
+    ),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: pTextImg,
@@ -73,7 +77,9 @@ Widget albumWidget(dynamic images, Function onTap) {
       alignment: Alignment.center,
       child: Column(
         children: [
-          Divider(),
+          Container(
+            height: duSetHeight(10),
+          ),
           imageCached(
             url:
                 'https://ks3-cn-beijing.ksyun.com/attachment/${images["hash"]}@base@tag=imgScale&w=320&h=320&m=2',
