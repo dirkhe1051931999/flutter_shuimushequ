@@ -64,10 +64,9 @@ class _MessagePageState extends State<MessagePage>
                 context: context,
                 params: {"id": _sectionId},
               );
+              this._scrollToTop();
               if (mounted) {
-                setState(() {
-                  this._scrollToTop();
-                });
+                setState(() {});
               }
             },
           );

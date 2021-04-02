@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:shuimushequ/common/type/post_details/post.dart';
+import 'package:shuimushequ/common/utils/date.dart';
 import 'package:shuimushequ/common/utils/index.dart';
 import 'package:shuimushequ/common/utils/parse_html.dart';
 import 'package:shuimushequ/common/values/index.dart';
 import 'package:shuimushequ/common/widgets/index.dart';
 
-Widget postContentWidget(TypePostDetailsResponse post, {Function onTapImage}) {
+Widget postContentWidget(
+  TypePostDetailsResponse post, {
+  Function onTapImage,
+  Function onTapUser,
+}) {
   List content =
       collectHtmlPContent(post.data.toJson()['topic']['article']['body']);
   List<String> aHref =
@@ -14,6 +19,73 @@ Widget postContentWidget(TypePostDetailsResponse post, {Function onTapImage}) {
       collectHtmlImageSrc(post.data.toJson()['topic']['article']['body']);
   List attachments = post.data.toJson()['topic']['article']['attachments'];
   List<Widget> pTextImg = [];
+  String userAvatar =
+      post.data.toJson()['topic']['article']['account']['avatarUrl'];
+  String userId = post.data.topic.article.account.id;
+  String name = post.data.toJson()['topic']['article']['account']['name'];
+  DateTime postTime = DateTime.fromMillisecondsSinceEpoch(
+    post.data.toJson()['topic']['article']['postTime'],
+  );
+  // 标题
+  pTextImg.add(
+    Container(
+      child: Text(
+        "『 " + post.data.toJson()['topic']['article']['subject'] + " 』",
+        style: TextStyle(
+          fontSize: duSetFontSize(16),
+          fontFamily: 'Montserrat',
+          color: AppColors.fontBlack,
+          height: 1.2,
+        ),
+      ),
+    ),
+  );
+  // account
+  pTextImg.add(
+    Container(
+      padding: EdgeInsets.symmetric(vertical: duSetHeight(10)),
+      child: Row(
+        children: [
+          InkWell(
+            onTap: () => onTapUser(userId, name),
+            child: ClipRRect(
+              borderRadius: Radii.k10pxRadius,
+              child: Image.network(
+                userAvatar + '?w=80&h=80',
+                width: duSetWidth(18),
+                height: duSetHeight(18),
+              ),
+            ),
+          ),
+          InkWell(
+            onTap: () => onTapUser(userId, name),
+            child: Padding(
+              padding: EdgeInsets.only(
+                left: duSetWidth(5),
+              ),
+              child: Text(
+                name,
+                style: TextStyle(
+                  fontSize: duSetFontSize(12),
+                  fontFamily: 'Montserrat',
+                  color: AppColors.fontBlack,
+                ),
+              ),
+            ),
+          ),
+          Spacer(),
+          Text(
+            ("${duTimeLineFormat(postTime)}"),
+            style: TextStyle(
+              fontSize: duSetFontSize(12),
+              fontFamily: 'Avenir',
+              color: AppColors.subGrey,
+            ),
+          ),
+        ],
+      ),
+    ),
+  );
   // 文本
   for (var i = 0; i < content.length; i++) {
     pTextImg.add(

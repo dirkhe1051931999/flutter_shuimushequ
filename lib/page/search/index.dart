@@ -10,7 +10,6 @@ import 'package:shuimushequ/common/type/search/account.dart';
 import 'package:shuimushequ/common/utils/index.dart';
 import 'package:shuimushequ/common/values/index.dart';
 import 'package:shuimushequ/common/widgets/index.dart';
-import 'package:shuimushequ/global.dart';
 import 'package:shuimushequ/page/search/account_widget.dart';
 import 'package:shuimushequ/page/search/article_widget.dart';
 import 'package:shuimushequ/page/search/board.widget.dart';
@@ -82,14 +81,14 @@ class _SearchPageState extends State<SearchPage> {
         style: TextStyle(
           color: AppColors.white,
           fontFamily: 'Montserrat',
-          fontSize: duSetFontSize(18),
+          fontSize: duSetFontSize(16),
           fontWeight: FontWeight.w600,
         ),
       ),
       leading: IconButton(
         icon: Icon(Icons.arrow_back_rounded),
         color: AppColors.white,
-        iconSize: duSetFontSize(30),
+        iconSize: duSetFontSize(25),
         onPressed: () {
           Navigator.pop(context);
         },
@@ -152,8 +151,8 @@ class _SearchPageState extends State<SearchPage> {
       pinned: true, //是否固定在顶部
       floating: true,
       delegate: _SliverAppBarDelegate(
-        minHeight: 130, //收起的高度
-        maxHeight: 130, //展开的最大高度
+        minHeight: 140, //收起的高度
+        maxHeight: 140, //展开的最大高度
         child: Container(
           color: AppColors.white,
           child: Column(
