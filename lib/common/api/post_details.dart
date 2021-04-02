@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shuimushequ/common/type/post_details/comment.dart';
 import 'package:shuimushequ/common/type/post_details/likes.dart';
+import 'package:shuimushequ/common/type/post_details/only_see.dart';
 import 'package:shuimushequ/common/type/post_details/post.dart';
 import 'package:shuimushequ/common/utils/index.dart';
 
@@ -47,6 +48,22 @@ class PostDetailsAPI {
       context: context,
       refresh: refresh,
       cacheDisk: cacheDisk,
+    );
+    return TypePostDetailsCommentResponse.fromJson(res);
+  }
+
+  static Future<TypePostDetailsCommentResponse> getOnlySeeComment({
+    @required BuildContext context,
+    bool refresh = false,
+    bool cacheDisk = false,
+    Map<String, dynamic> params,
+  }) async {
+    var res = await HttpUtil().get(
+      'api/topic/loadArticlesByMode/${params['topicId']}/4/1/999',
+      context: context,
+      refresh: refresh,
+      cacheDisk: cacheDisk,
+      params: {"articleId": params['articleId']},
     );
     return TypePostDetailsCommentResponse.fromJson(res);
   }

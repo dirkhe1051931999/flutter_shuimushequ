@@ -9,6 +9,7 @@ class Routes {
   static String postDetailsPage = '/post_details/:id';
   static String imageView = '/imageView';
   static String search = '/search';
+  static String account = '/account/:id/:name';
   static void configureRoutes(FluroRouter router) {
     router.notFoundHandler = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) {
@@ -22,5 +23,6 @@ class Routes {
     router.define(login, handler: loginPageHandler);
     router.define(welcome, handler: welcomePageHandler);
     router.define(postDetailsPage, handler: postDetailPageHandler);
+    router.define(account, handler: accountPageHandler);
   }
 }

@@ -15,7 +15,7 @@ import 'package:shuimushequ/common/values/colors.dart';
 import 'package:shuimushequ/common/values/index.dart';
 import 'package:shuimushequ/common/widgets/index.dart';
 import 'package:shuimushequ/page/post_details/mask_input.dart';
-import 'package:shuimushequ/page/post_details/post_account.dart';
+import 'package:shuimushequ/page/post_details/only_see_widget.dart';
 import 'package:shuimushequ/page/post_details/post_comment.dart';
 import 'package:shuimushequ/page/post_details/post_content.dart';
 import 'package:shuimushequ/page/post_details/post_like.dart';
@@ -23,8 +23,6 @@ import 'package:shuimushequ/page/post_details/post_like.dart';
 class PostDetailPage extends StatefulWidget {
   final String id;
   const PostDetailPage({this.id = ''});
-  // PostDetailPage({Key key}) : super(key: key);
-
   @override
   _PostDetailPageState createState() => _PostDetailPageState();
 }
@@ -33,10 +31,8 @@ class _PostDetailPageState extends State<PostDetailPage> {
   TypePostDetailsResponse _postDetails;
   TypePostDetailsLikesResponse _postDetailsLikes;
   TypePostDetailsCommentResponse _postDetailsComment;
-  ScrollController _scrollController = ScrollController(keepScrollOffset: true);
-  bool _showBackTop = false;
-  bool _showAccountInHeader = false;
-  bool _showCommentModeInheader = false;
+  TypePostDetailsCommentResponse _onlySeeResponse;
+  ScrollController _scrollController = ScrollController();
   bool _getMoreLikes = false;
   bool isNoMoreData = false;
   bool isMoreDataing = false;
@@ -64,11 +60,6 @@ class _PostDetailPageState extends State<PostDetailPage> {
         commentPageNum++;
         _loadMoreData();
       }
-      _showAccountInHeader = _scrollController.position.pixels > 50;
-      _showBackTop = _scrollController.position.pixels >= 500;
-      // _scrollController.position.pixels 获取当前滚动部件滚动的距离
-      // 当滚动距离大于 800 之后，显示回到顶部按钮
-      setState(() {});
     });
     this._getData();
   }
@@ -108,7 +99,7 @@ class _PostDetailPageState extends State<PostDetailPage> {
     }
   }
 
-  _LoadingNewData() async {
+  _loadingNewData() async {
     _postDetailsComment = await PostDetailsAPI.getPostDetailsComment(
       context: context,
       params: {
@@ -203,55 +194,13 @@ class _PostDetailPageState extends State<PostDetailPage> {
       pinned: true, //是否固定在顶部
       floating: true,
       delegate: _SliverAppBarDelegate(
-        minHeight: !_showCommentModeInheader
-            ? duSetHeight(70)
-            : duSetHeight(48), //收起的高度
-        maxHeight: !_showCommentModeInheader
-            ? duSetHeight(70)
-            : duSetHeight(48), //展开的最大高度
+        minHeight: duSetHeight(70),
+        maxHeight: duSetHeight(70),
         child: Container(
           color: AppColors.white,
           alignment: Alignment.centerLeft,
-          child: _postDetails == null
-              ? Container()
-              : !_showCommentModeInheader
-                  ? RichText(
-                      text: TextSpan(
-                        children: [
-                          TextSpan(
-                            style: TextStyle(
-                              fontSize: duSetFontSize(16),
-                              fontFamily: 'Montserrat',
-                              color: AppColors.fontBlack,
-                              height: 1.2,
-                            ),
-                            text: "『 " +
-                                _postDetails.data.toJson()['topic']['article']
-                                    ['subject'] +
-                                " 』",
-                          ),
-                          if (_showAccountInHeader)
-                            WidgetSpan(
-                              child: Divider(),
-                            ),
-                        ],
-                      ),
-                    )
-                  : _buildCommentModeBar(_postDetails),
+          child: Text('123'),
         ),
-      ),
-    );
-  }
-
-  Widget _buildAccount() {
-    return SliverToBoxAdapter(
-      child: Container(
-        padding: EdgeInsets.symmetric(horizontal: duSetWidth(15)),
-        alignment: Alignment.centerLeft,
-        height: 20,
-        child: _postDetails == null
-            ? Container()
-            : postAccountWidget(_postDetails),
       ),
     );
   }
@@ -277,6 +226,11 @@ class _PostDetailPageState extends State<PostDetailPage> {
                             _appState.setImageViewAllData(images);
                             Application.router
                                 .navigateTo(context, '/imageView');
+                          },
+                          onTapUser: (id, name) {
+                            print(name);
+                            Application.router
+                                .navigateTo(context, '/account/$id/$name');
                           },
                         ),
                         Container(
@@ -305,15 +259,16 @@ class _PostDetailPageState extends State<PostDetailPage> {
                                     } else {
                                       await _scrollController.animateTo(
                                         likesPosition,
-                                        duration: Duration(milliseconds: 500),
-                                        curve: Curves.bounceIn,
+                                        duration: Duration(milliseconds: 10),
+                                        curve: Curves.ease,
                                       );
                                       likesPosition = 0;
                                     }
                                     _getMoreLikes = !_getMoreLikes;
                                     setState(() {});
                                   },
-                                )),
+                                ),
+                              ),
                         Container(
                           height: duSetHeight(10),
                           color: AppColors.bgGrey,
@@ -331,7 +286,55 @@ class _PostDetailPageState extends State<PostDetailPage> {
                                     _postDetailsComment,
                                     onTapMore: (item) {},
                                     onTapReply: (item) {},
-                                    onTapOnlySee: (item) {},
+                                    onTapOnlySee: (item) async {
+                                      SmartDialog.showLoading();
+                                      _onlySeeResponse = await PostDetailsAPI
+                                          .getOnlySeeComment(
+                                        context: context,
+                                        params: {
+                                          "topicId": item['topicId'],
+                                          "articleId": item['id'],
+                                        },
+                                      );
+
+                                      if (_onlySeeResponse
+                                              .data.articles.length ==
+                                          1) {
+                                        SmartDialog.showToast('只有这一条哦~');
+                                        SmartDialog.dismiss();
+                                        return;
+                                      }
+                                      await SmartDialog.show(
+                                        alignmentTemp: Alignment.bottomCenter,
+                                        clickBgDismissTemp: true,
+                                        widget: Container(
+                                          height: duSetHeight(550),
+                                          width: duSetWidth(350),
+                                          decoration: BoxDecoration(
+                                            color: AppColors.white,
+                                            borderRadius: BorderRadius.only(
+                                              topLeft: Radius.circular(10),
+                                              topRight: Radius.circular(10),
+                                            ),
+                                          ),
+                                          child: onlySeeWidget(
+                                            _onlySeeResponse,
+                                            onTapMore: (item) {},
+                                            onTapReply: (item) {},
+                                            onTapUser: (id, name) {
+                                              Application.router.navigateTo(
+                                                  context,
+                                                  '/account/$id/$name');
+                                            },
+                                          ),
+                                        ),
+                                      );
+                                      SmartDialog.dismiss();
+                                    },
+                                    onTapUser: (id, name) {
+                                      Application.router.navigateTo(
+                                          context, '/account/$id/$name');
+                                    },
                                   )
                                 ],
                               ),
@@ -343,6 +346,112 @@ class _PostDetailPageState extends State<PostDetailPage> {
         childCount: 1,
       ),
     );
+  }
+
+  Widget _buildBottomSheet() {
+    return _postDetailsComment == null
+        ? Container()
+        : GestureDetector(
+            child: Container(
+              height: duSetHeight(48),
+              padding: EdgeInsets.symmetric(horizontal: duSetWidth(15)),
+              decoration: BoxDecoration(
+                border: Border(
+                  top: BorderSide(
+                    color: AppColors.borderGrey,
+                    width: duSetWidth(1),
+                  ),
+                ),
+              ),
+              child: Row(
+                children: [
+                  Container(
+                    child: Text(
+                      '评论共 ${_postDetailsComment.data.toJson()['pager']['totalPages']} 页',
+                      style: TextStyle(
+                        color: AppColors.subGrey,
+                        fontFamily: 'Montserrat',
+                        fontSize: duSetFontSize(12),
+                      ),
+                    ),
+                    width: duSetWidth(110),
+                  ),
+                  Container(
+                    width: duSetWidth(130),
+                    height: duSetHeight(28),
+                    alignment: Alignment.centerLeft,
+                    padding: EdgeInsets.symmetric(horizontal: duSetWidth(10)),
+                    decoration: BoxDecoration(
+                      color: AppColors.bgGrey,
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(20),
+                        topRight: Radius.circular(20),
+                        bottomLeft: Radius.circular(20),
+                        bottomRight: Radius.circular(20),
+                      ),
+                    ),
+                    child: Text(
+                      '发表你的观点',
+                      style: TextStyle(
+                        color: AppColors.subGrey,
+                        fontFamily: 'Montserrat',
+                        fontSize: duSetFontSize(12),
+                      ),
+                    ),
+                  ),
+                  Spacer(),
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.star_border_rounded,
+                        size: duSetFontSize(30),
+                        color: AppColors.subGrey,
+                      ),
+                      Padding(
+                        padding:
+                            EdgeInsets.symmetric(horizontal: duSetWidth(10)),
+                        child: Icon(Icons.favorite_border,
+                            size: duSetFontSize(25), color: AppColors.subGrey),
+                      ),
+                      Icon(
+                        Icons.ios_share,
+                        size: duSetFontSize(25),
+                        color: AppColors.subGrey,
+                      ),
+                    ],
+                  )
+                ],
+              ),
+            ),
+            onTap: () {
+              Navigator.of(context).push(
+                PageRouteBuilder(
+                  opaque: false,
+                  pageBuilder: (context, animation, secondaryAnimation) {
+                    return maskPage();
+                  },
+                  transitionsBuilder: (
+                    BuildContext context,
+                    Animation<double> animation1,
+                    Animation<double> animation2,
+                    Widget child,
+                  ) {
+                    ///  渐变过渡
+                    return FadeTransition(
+                      ///渐变过渡 0.0-1.0
+                      opacity: Tween(begin: 0.0, end: 1.0).animate(
+                        CurvedAnimation(
+                          parent: animation1,
+                          curve: Curves.fastOutSlowIn,
+                        ),
+                      ),
+                      child: child,
+                    );
+                  },
+                ),
+              );
+            },
+          );
   }
 
   Widget _buildCommentModeBar(TypePostDetailsResponse details) {
@@ -402,7 +511,7 @@ class _PostDetailPageState extends State<PostDetailPage> {
                       commentMode = 0;
                       _resetQueryData();
                       SmartDialog.showLoading();
-                      await this._LoadingNewData();
+                      await this._loadingNewData();
                       SmartDialog.dismiss();
                       setState(() {});
                     },
@@ -430,7 +539,7 @@ class _PostDetailPageState extends State<PostDetailPage> {
                       commentMode = 1;
                       _resetQueryData();
                       SmartDialog.showLoading();
-                      await this._LoadingNewData();
+                      await this._loadingNewData();
                       SmartDialog.dismiss();
                       setState(() {});
                     },
@@ -459,7 +568,7 @@ class _PostDetailPageState extends State<PostDetailPage> {
                       commentMode = 2;
                       _resetQueryData();
                       SmartDialog.showLoading();
-                      await this._LoadingNewData();
+                      await this._loadingNewData();
                       SmartDialog.dismiss();
                       setState(() {});
                     },
@@ -501,140 +610,16 @@ class _PostDetailPageState extends State<PostDetailPage> {
   Widget build(BuildContext context) {
     _appState = Provider.of<AppState>(context);
     return Scaffold(
-      floatingActionButton: _showBackTop // 当需要显示的时候展示按钮，不需要的时候隐藏，设置 null
-          ? GestureDetector(
-              onTap: () {
-                // scrollController 通过 animateTo 方法滚动到某个具体高度
-                // duration 表示动画的时长，curve 表示动画的运行方式，flutter 在 Curves 提供了许多方式
-                _scrollController.animateTo(
-                  0.0,
-                  duration: Duration(milliseconds: 500),
-                  curve: Curves.bounceIn,
-                );
-              },
-              child: Padding(
-                padding: EdgeInsets.only(bottom: duSetHeight(50)),
-                child: Icon(
-                  Icons.arrow_circle_up,
-                  size: duSetFontSize(30),
-                  color: AppColors.fontBlue,
-                ),
-              ),
-            )
-          : null,
       appBar: _buildAppBar(_board),
       backgroundColor: AppColors.white,
       body: CustomScrollView(
         controller: _scrollController,
         slivers: <Widget>[
-          _buildStickyBar(),
-          _buildAccount(),
+          // _buildStickyBar(),
           _buildList(),
         ],
       ),
-      bottomSheet: GestureDetector(
-        child: Container(
-          height: duSetHeight(48),
-          padding: EdgeInsets.symmetric(horizontal: duSetWidth(15)),
-          decoration: BoxDecoration(
-            border: Border(
-              top: BorderSide(
-                color: AppColors.borderGrey,
-                width: duSetWidth(1),
-              ),
-            ),
-          ),
-          child: Row(
-            children: [
-              Container(
-                child: Text(
-                  '评论：第1页/共1页',
-                  style: TextStyle(
-                    color: AppColors.fontBlack,
-                    fontFamily: 'Montserrat',
-                    fontSize: duSetFontSize(12),
-                  ),
-                ),
-                width: duSetWidth(110),
-              ),
-              Container(
-                width: duSetWidth(130),
-                height: duSetHeight(28),
-                alignment: Alignment.centerLeft,
-                padding: EdgeInsets.symmetric(horizontal: duSetWidth(10)),
-                decoration: BoxDecoration(
-                  color: AppColors.bgGrey,
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(20),
-                    topRight: Radius.circular(20),
-                    bottomLeft: Radius.circular(20),
-                    bottomRight: Radius.circular(20),
-                  ),
-                ),
-                child: Text(
-                  '发表你的观点',
-                  style: TextStyle(
-                    color: AppColors.fontBlack,
-                    fontFamily: 'Montserrat',
-                    fontSize: duSetFontSize(12),
-                  ),
-                ),
-              ),
-              Spacer(),
-              Row(
-                children: [
-                  Icon(
-                    Icons.star_border_rounded,
-                    size: duSetFontSize(30),
-                    color: AppColors.fontBlack,
-                  ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: duSetWidth(10)),
-                    child: Icon(
-                      Icons.favorite_border,
-                      size: duSetFontSize(25),
-                      color: AppColors.fontBlack,
-                    ),
-                  ),
-                  Icon(
-                    Icons.ios_share,
-                    size: duSetFontSize(25),
-                    color: AppColors.fontBlack,
-                  ),
-                ],
-              )
-            ],
-          ),
-        ),
-        onTap: () {
-          Navigator.of(context).push(
-            PageRouteBuilder(
-              opaque: false,
-              pageBuilder: (context, animation, secondaryAnimation) {
-                return maskPage();
-              },
-              transitionsBuilder: (
-                BuildContext context,
-                Animation<double> animation1,
-                Animation<double> animation2,
-                Widget child,
-              ) {
-                ///  渐变过渡
-                return FadeTransition(
-                  ///渐变过渡 0.0-1.0
-                  opacity: Tween(begin: 0.0, end: 1.0).animate(
-                    CurvedAnimation(
-                      parent: animation1,
-                      curve: Curves.fastOutSlowIn,
-                    ),
-                  ),
-                  child: child,
-                );
-              },
-            ),
-          );
-        },
-      ),
+      bottomSheet: _buildBottomSheet(),
     );
   }
 }

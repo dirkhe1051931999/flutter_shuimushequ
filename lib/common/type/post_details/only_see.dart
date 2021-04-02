@@ -1,19 +1,19 @@
 // To parse this JSON data, do
 //
-//     final typePostDetailsCommentResponse = typePostDetailsCommentResponseFromJson(jsonString);
+//     final typePostDetailsOnlySeeResponse = typePostDetailsOnlySeeResponseFromJson(jsonString);
 
 import 'dart:convert';
 
-TypePostDetailsCommentResponse typePostDetailsCommentResponseFromJson(
+TypePostDetailsOnlySeeResponse typePostDetailsOnlySeeResponseFromJson(
         String str) =>
-    TypePostDetailsCommentResponse.fromJson(json.decode(str));
+    TypePostDetailsOnlySeeResponse.fromJson(json.decode(str));
 
-String typePostDetailsCommentResponseToJson(
-        TypePostDetailsCommentResponse data) =>
+String typePostDetailsOnlySeeResponseToJson(
+        TypePostDetailsOnlySeeResponse data) =>
     json.encode(data.toJson());
 
-class TypePostDetailsCommentResponse {
-  TypePostDetailsCommentResponse({
+class TypePostDetailsOnlySeeResponse {
+  TypePostDetailsOnlySeeResponse({
     this.code,
     this.data,
     this.kbsCode,
@@ -25,8 +25,8 @@ class TypePostDetailsCommentResponse {
   int kbsCode;
   String message;
 
-  factory TypePostDetailsCommentResponse.fromJson(Map<String, dynamic> json) =>
-      TypePostDetailsCommentResponse(
+  factory TypePostDetailsOnlySeeResponse.fromJson(Map<String, dynamic> json) =>
+      TypePostDetailsOnlySeeResponse(
         code: json["code"] == null ? null : json["code"],
         data: json["data"] == null ? null : Data.fromJson(json["data"]),
         kbsCode: json["kbsCode"] == null ? null : json["kbsCode"],
@@ -94,16 +94,14 @@ class Article {
     this.renderType,
     this.topicOrder,
     this.account,
-    this.likes,
     this.status,
-    this.attachments,
   });
 
   Subject subject;
   Id groupId;
   int editTime;
   String body;
-  String accountId;
+  AccountId accountId;
   int score;
   int postTime;
   TopicIdEnum topicId;
@@ -117,9 +115,7 @@ class Article {
   int renderType;
   int topicOrder;
   Account account;
-  List<Like> likes;
   int status;
-  List<Attachment> attachments;
 
   factory Article.fromJson(Map<String, dynamic> json) => Article(
         subject:
@@ -127,7 +123,9 @@ class Article {
         groupId: json["groupId"] == null ? null : idValues.map[json["groupId"]],
         editTime: json["editTime"] == null ? null : json["editTime"],
         body: json["body"] == null ? null : json["body"],
-        accountId: json["accountId"] == null ? null : json["accountId"],
+        accountId: json["accountId"] == null
+            ? null
+            : accountIdValues.map[json["accountId"]],
         score: json["score"] == null ? null : json["score"],
         postTime: json["postTime"] == null ? null : json["postTime"],
         topicId: json["topicId"] == null
@@ -147,14 +145,7 @@ class Article {
         topicOrder: json["topicOrder"] == null ? null : json["topicOrder"],
         account:
             json["account"] == null ? null : Account.fromJson(json["account"]),
-        likes: json["likes"] == null
-            ? null
-            : List<Like>.from(json["likes"].map((x) => Like.fromJson(x))),
         status: json["status"] == null ? null : json["status"],
-        attachments: json["attachments"] == null
-            ? null
-            : List<Attachment>.from(
-                json["attachments"].map((x) => Attachment.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
@@ -162,7 +153,8 @@ class Article {
         "groupId": groupId == null ? null : idValues.reverse[groupId],
         "editTime": editTime == null ? null : editTime,
         "body": body == null ? null : body,
-        "accountId": accountId == null ? null : accountId,
+        "accountId":
+            accountId == null ? null : accountIdValues.reverse[accountId],
         "score": score == null ? null : score,
         "postTime": postTime == null ? null : postTime,
         "topicId": topicId == null ? null : topicIdEnumValues.reverse[topicId],
@@ -176,13 +168,7 @@ class Article {
         "renderType": renderType == null ? null : renderType,
         "topicOrder": topicOrder == null ? null : topicOrder,
         "account": account == null ? null : account.toJson(),
-        "likes": likes == null
-            ? null
-            : List<dynamic>.from(likes.map((x) => x.toJson())),
         "status": status == null ? null : status,
-        "attachments": attachments == null
-            ? null
-            : List<dynamic>.from(attachments.map((x) => x.toJson())),
       };
 }
 
@@ -209,16 +195,16 @@ class Account {
   String avatarUrl;
   int level;
   bool isFans;
-  String avatar;
-  String levelTitle;
+  Avatar avatar;
+  LevelTitle levelTitle;
   int type;
-  String nick;
+  Nick nick;
   int score;
   int loginTime;
   int createTime;
   bool isBlack;
-  String name;
-  String id;
+  Name name;
+  AccountId id;
   String k3SUrl;
 
   factory Account.fromJson(Map<String, dynamic> json) => Account(
@@ -226,16 +212,19 @@ class Account {
         avatarUrl: json["avatarUrl"] == null ? null : json["avatarUrl"],
         level: json["level"] == null ? null : json["level"],
         isFans: json["isFans"] == null ? null : json["isFans"],
-        avatar: json["avatar"] == null ? null : json["avatar"],
-        levelTitle: json["levelTitle"] == null ? null : json["levelTitle"],
+        avatar:
+            json["avatar"] == null ? null : avatarValues.map[json["avatar"]],
+        levelTitle: json["levelTitle"] == null
+            ? null
+            : levelTitleValues.map[json["levelTitle"]],
         type: json["type"] == null ? null : json["type"],
-        nick: json["nick"] == null ? null : json["nick"],
+        nick: json["nick"] == null ? null : nickValues.map[json["nick"]],
         score: json["score"] == null ? null : json["score"],
         loginTime: json["loginTime"] == null ? null : json["loginTime"],
         createTime: json["createTime"] == null ? null : json["createTime"],
         isBlack: json["isBlack"] == null ? null : json["isBlack"],
-        name: json["name"] == null ? null : json["name"],
-        id: json["id"] == null ? null : json["id"],
+        name: json["name"] == null ? null : nameValues.map[json["name"]],
+        id: json["id"] == null ? null : accountIdValues.map[json["id"]],
         k3SUrl: json["k3sUrl"] == null ? null : json["k3sUrl"],
       );
 
@@ -244,75 +233,46 @@ class Account {
         "avatarUrl": avatarUrl == null ? null : avatarUrl,
         "level": level == null ? null : level,
         "isFans": isFans == null ? null : isFans,
-        "avatar": avatar == null ? null : avatar,
-        "levelTitle": levelTitle == null ? null : levelTitle,
+        "avatar": avatar == null ? null : avatarValues.reverse[avatar],
+        "levelTitle":
+            levelTitle == null ? null : levelTitleValues.reverse[levelTitle],
         "type": type == null ? null : type,
-        "nick": nick == null ? null : nick,
+        "nick": nick == null ? null : nickValues.reverse[nick],
         "score": score == null ? null : score,
         "loginTime": loginTime == null ? null : loginTime,
         "createTime": createTime == null ? null : createTime,
         "isBlack": isBlack == null ? null : isBlack,
-        "name": name == null ? null : name,
-        "id": id == null ? null : id,
+        "name": name == null ? null : nameValues.reverse[name],
+        "id": id == null ? null : accountIdValues.reverse[id],
         "k3sUrl": k3SUrl == null ? null : k3SUrl,
       };
 }
 
-class Attachment {
-  Attachment({
-    this.public,
-    this.size,
-    this.serial,
-    this.cdnUrl,
-    this.ks3Url,
-    this.name,
-    this.id,
-    this.type,
-    this.hash,
-    this.url,
-    this.status,
-  });
+enum Avatar { FILE_E4_F6_C378_C9_E856913798_D0_D6_DE6154_D0 }
 
-  bool public;
-  int size;
-  int serial;
-  String cdnUrl;
-  String ks3Url;
-  String name;
-  String id;
-  String type;
-  String hash;
-  String url;
-  int status;
+final avatarValues = EnumValues({
+  "file/e4f6c378c9e856913798d0d6de6154d0":
+      Avatar.FILE_E4_F6_C378_C9_E856913798_D0_D6_DE6154_D0
+});
 
-  factory Attachment.fromJson(Map<String, dynamic> json) => Attachment(
-        public: json["public"] == null ? null : json["public"],
-        size: json["size"] == null ? null : json["size"],
-        serial: json["serial"] == null ? null : json["serial"],
-        cdnUrl: json["cdnUrl"] == null ? null : json["cdnUrl"],
-        ks3Url: json["ks3Url"] == null ? null : json["ks3Url"],
-        name: json["name"] == null ? null : json["name"],
-        id: json["id"] == null ? null : json["id"],
-        type: json["type"] == null ? null : json["type"],
-        hash: json["hash"] == null ? null : json["hash"],
-        url: json["url"] == null ? null : json["url"],
-        status: json["status"] == null ? null : json["status"],
-      );
+enum AccountId { A19_DEDC8773_B8_F8_FF18470_CA38_AF0_BFA }
 
-  Map<String, dynamic> toJson() => {
-        "public": public == null ? null : public,
-        "size": size == null ? null : size,
-        "serial": serial == null ? null : serial,
-        "cdnUrl": cdnUrl == null ? null : cdnUrl,
-        "ks3Url": ks3Url == null ? null : ks3Url,
-        "name": name == null ? null : name,
-        "id": id == null ? null : id,
-        "type": type == null ? null : type,
-        "hash": hash == null ? null : hash,
-        "url": url == null ? null : url,
-        "status": status == null ? null : status,
-      };
-}
+final accountIdValues = EnumValues({
+  "a19dedc8773b8f8ff18470ca38af0bfa":
+      AccountId.A19_DEDC8773_B8_F8_FF18470_CA38_AF0_BFA
+});
+
+enum LevelTitle { EMPTY }
+
+final levelTitleValues = EnumValues({"砥柱": LevelTitle.EMPTY});
+
+enum Name { WHITELIES }
+
+final nameValues = EnumValues({"whitelies": Name.WHITELIES});
+
+enum Nick { EMPTY }
+
+final nickValues = EnumValues({"国企职场观察": Nick.EMPTY});
 
 enum BoardIdEnum { THE_45_FF94_C59_BBCCF733381_AEEBC5_AD5_E55 }
 
@@ -321,85 +281,18 @@ final boardIdEnumValues = EnumValues({
       BoardIdEnum.THE_45_FF94_C59_BBCCF733381_AEEBC5_AD5_E55
 });
 
-enum Id {
-  THE_486881_BA7_E253_CE615482722150_A14_DD,
-  DCF6_DC9_C4_A8_DCFADA0_C5_A240_AEA3_AB1_A
-}
+enum Id { DCF6_DC9_C4_A8_DCFADA0_C5_A240_AEA3_AB1_A }
 
 final idValues = EnumValues({
   "dcf6dc9c4a8dcfada0c5a240aea3ab1a":
-      Id.DCF6_DC9_C4_A8_DCFADA0_C5_A240_AEA3_AB1_A,
-  "486881ba7e253ce615482722150a14dd":
-      Id.THE_486881_BA7_E253_CE615482722150_A14_DD
+      Id.DCF6_DC9_C4_A8_DCFADA0_C5_A240_AEA3_AB1_A
 });
 
-class Like {
-  Like({
-    this.accountId,
-    this.score,
-    this.accountName,
-    this.serial,
-    this.articleId,
-    this.id,
-    this.tag,
-    this.time,
-    this.body,
-    this.account,
-    this.status,
-  });
-
-  String accountId;
-  int score;
-  String accountName;
-  int serial;
-  Id articleId;
-  String id;
-  Tag tag;
-  int time;
-  String body;
-  Account account;
-  int status;
-
-  factory Like.fromJson(Map<String, dynamic> json) => Like(
-        accountId: json["accountId"] == null ? null : json["accountId"],
-        score: json["score"] == null ? null : json["score"],
-        accountName: json["accountName"] == null ? null : json["accountName"],
-        serial: json["serial"] == null ? null : json["serial"],
-        articleId:
-            json["articleId"] == null ? null : idValues.map[json["articleId"]],
-        id: json["id"] == null ? null : json["id"],
-        tag: json["tag"] == null ? null : tagValues.map[json["tag"]],
-        time: json["time"] == null ? null : json["time"],
-        body: json["body"] == null ? null : json["body"],
-        account:
-            json["account"] == null ? null : Account.fromJson(json["account"]),
-        status: json["status"] == null ? null : json["status"],
-      );
-
-  Map<String, dynamic> toJson() => {
-        "accountId": accountId == null ? null : accountId,
-        "score": score == null ? null : score,
-        "accountName": accountName == null ? null : accountName,
-        "serial": serial == null ? null : serial,
-        "articleId": articleId == null ? null : idValues.reverse[articleId],
-        "id": id == null ? null : id,
-        "tag": tag == null ? null : tagValues.reverse[tag],
-        "time": time == null ? null : time,
-        "body": body == null ? null : body,
-        "account": account == null ? null : account.toJson(),
-        "status": status == null ? null : status,
-      };
-}
-
-enum Tag { EMPTY, TAG }
-
-final tagValues = EnumValues({"": Tag.EMPTY, "祈寿年无须服药，但愿身无病，心": Tag.TAG});
-
-enum Subject { THE_33, RE_33 }
+enum Subject { RE_33, RE_RE_33 }
 
 final subjectValues = EnumValues({
   "Re: 33岁了，想做个清醒正常的打工人": Subject.RE_33,
-  "33岁了，想做个清醒正常的打工人": Subject.THE_33
+  "Re: Re:33岁了，想做个清醒正常的打工人": Subject.RE_RE_33
 });
 
 enum TopicIdEnum { THE_3_EE9_A3_D2_C758_FB32_DA47_EBFD072_C4_C11 }
@@ -520,7 +413,7 @@ class Topic {
   });
 
   int availables;
-  Subject subject;
+  String subject;
   Id firstArticleId;
   int likeAvailables;
   int flushTime;
@@ -534,8 +427,7 @@ class Topic {
 
   factory Topic.fromJson(Map<String, dynamic> json) => Topic(
         availables: json["availables"] == null ? null : json["availables"],
-        subject:
-            json["subject"] == null ? null : subjectValues.map[json["subject"]],
+        subject: json["subject"] == null ? null : json["subject"],
         firstArticleId: json["firstArticleId"] == null
             ? null
             : idValues.map[json["firstArticleId"]],
@@ -558,7 +450,7 @@ class Topic {
 
   Map<String, dynamic> toJson() => {
         "availables": availables == null ? null : availables,
-        "subject": subject == null ? null : subjectValues.reverse[subject],
+        "subject": subject == null ? null : subject,
         "firstArticleId":
             firstArticleId == null ? null : idValues.reverse[firstArticleId],
         "likeAvailables": likeAvailables == null ? null : likeAvailables,

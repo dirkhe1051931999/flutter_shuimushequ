@@ -36,4 +36,16 @@ class UserAPI {
     );
     return TypeMyResponse.fromJson(res);
   }
+
+  static Future getUserTimeLineData({
+    @required BuildContext context,
+    Map<String, dynamic> params,
+  }) async {
+    var res = await HttpUtil().get(
+      'api/account/${params['name']}/mixlogs',
+      context: context,
+      params: {'page': params['pageNum']},
+    );
+    return res;
+  }
 }

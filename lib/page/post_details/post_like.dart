@@ -17,7 +17,7 @@ Widget postLikeWidget(
   List<Widget> _likes = [];
   _likes.add(
     Container(
-      width: duSetWidth(88),
+      width: duSetWidth(68),
       margin: EdgeInsets.symmetric(vertical: duSetHeight(10)),
       child: TextButton(
         clipBehavior: Clip.hardEdge,
@@ -33,7 +33,7 @@ Widget postLikeWidget(
           "Like",
           style: TextStyle(
             fontFamily: 'Avenir',
-            fontSize: duSetFontSize(16),
+            fontSize: duSetFontSize(14),
             fontWeight: FontWeight.w500,
           ),
         ),
@@ -58,26 +58,26 @@ Widget postLikeWidget(
                 horizontal: duSetWidth(3),
                 vertical: duSetHeight(2),
               ),
-              width: duSetWidth(45),
+              width: duSetWidth(35),
               decoration: BoxDecoration(
                 color: score > 0 ? HexColor('#faeeee') : HexColor('#f5f5f5'),
                 borderRadius: Radii.k10pxRadius,
               ),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Image.asset(
                     'assets/images/${score > 0 ? '+' + score.toString() : score}.png',
-                    width: duSetWidth(18),
-                    height: duSetHeight(18),
+                    width: duSetWidth(14),
+                    height: duSetHeight(14),
                   ),
                   Text(
                     '${score > 0 ? '+' + score.toString() : score}',
                     style: TextStyle(
                       color: score > 0 ? AppColors.red : AppColors.subGrey,
                       fontFamily: 'Avenir',
-                      fontSize: duSetFontSize(12),
+                      fontSize: duSetFontSize(10),
                       height: 1.3,
                     ),
                   )
@@ -91,7 +91,7 @@ Widget postLikeWidget(
                 style: TextStyle(
                   color: AppColors.fontBlack,
                   fontFamily: 'Montserrat',
-                  fontSize: duSetFontSize(14),
+                  fontSize: duSetFontSize(12),
                   height: 1.3,
                 ),
               ),
@@ -104,7 +104,6 @@ Widget postLikeWidget(
   if (allLikes.length > 3) {
     _likes.add(
       Container(
-        margin: EdgeInsets.symmetric(vertical: duSetHeight(5)),
         child: TextButton(
           clipBehavior: Clip.hardEdge,
           style: TextButton.styleFrom(
@@ -118,10 +117,16 @@ Widget postLikeWidget(
               Text(
                 !_getMoreLikes ? '${allLikes.length + 1} 人参与，去看看' : '收起',
                 textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: AppColors.fontBlue,
+                  fontFamily: 'Montserrat',
+                  fontSize: duSetFontSize(12),
+                  height: 1.3,
+                ),
               ),
               Icon(
                 Icons.arrow_forward_ios_rounded,
-                size: duSetFontSize(15),
+                size: duSetFontSize(12),
                 color: AppColors.fontBlue,
               )
             ],

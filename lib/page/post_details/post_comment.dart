@@ -8,15 +8,19 @@ import 'package:shuimushequ/common/widgets/text_limt_display.dart';
 
 Widget postCommentWidget(
   TypePostDetailsCommentResponse post, {
+  String whereFrom = 'comment',
   Function onTapMore,
   Function onTapReply,
   Function onTapOnlySee,
+  Function onTapUser,
 }) {
   List comments = post.data.toJson()['articles'];
+  dynamic articleAccount = comments[0]['account'];
   List<Widget> _comments = [];
   for (var i = 1; i < comments.length; i++) {
     dynamic item = comments[i];
     String userAvatar = item['account']['avatarUrl'];
+    String userId = item['account']['id'];
     String userName = item['account']['name'];
     String body = item['body'];
     String replyHtml = body.replaceAll(
@@ -35,46 +39,59 @@ Widget postCommentWidget(
         DateTime.fromMillisecondsSinceEpoch(item['postTime']);
     _comments.add(Column(
       children: <Widget>[
-        Row(
-          children: <Widget>[
-            ClipOval(
-              child: Image.network(
-                userAvatar + '?w=80&h=80',
-                width: duSetWidth(18),
-                height: duSetHeight(18),
-                fit: BoxFit.fitWidth,
+        Padding(
+          padding: EdgeInsets.only(bottom: duSetHeight(5)),
+          child: Row(
+            children: <Widget>[
+              InkWell(
+                onTap: () => onTapUser(userId, userName),
+                child: ClipOval(
+                  child: Image.network(
+                    userAvatar + '?w=80&h=80',
+                    width: duSetWidth(18),
+                    height: duSetHeight(18),
+                    fit: BoxFit.fitWidth,
+                  ),
+                ),
               ),
-            ),
-            Padding(
-              padding: EdgeInsets.only(left: duSetWidth(8)),
-              child: Text(
-                userName,
+              InkWell(
+                onTap: () => onTapUser(userId, userName),
+                child: Padding(
+                  padding: EdgeInsets.only(left: duSetWidth(8)),
+                  child: Text(
+                    userName,
+                    style: TextStyle(
+                      fontSize: duSetFontSize(12),
+                      fontFamily: 'Montserrat',
+                      color: AppColors.fontBlack,
+                    ),
+                  ),
+                ),
+              ),
+              Spacer(),
+              Text(
+                articleAccount['id'] != item['account']['id']
+                    ? '${item['topicOrder']} 楼'
+                    : '楼主',
                 style: TextStyle(
                   fontSize: duSetFontSize(12),
                   fontFamily: 'Montserrat',
-                  color: AppColors.fontBlack,
+                  color: AppColors.subGrey,
                 ),
-              ),
-            ),
-            Spacer(),
-            Text(
-              '${item['topicOrder']} 楼',
-              style: TextStyle(
-                fontSize: duSetFontSize(12),
-                fontFamily: 'Montserrat',
-                color: AppColors.subGrey,
-              ),
-            ),
-          ],
+              )
+            ],
+          ),
         ),
         othersUserReply != ''
             ? Row(
                 children: <Widget>[
                   Container(
-                    margin: EdgeInsets.only(left: duSetWidth(38)),
+                    margin: EdgeInsets.only(left: duSetWidth(22)),
                     padding: EdgeInsets.symmetric(
-                        horizontal: duSetWidth(10), vertical: duSetHeight(10)),
-                    width: duSetWidth(300),
+                        horizontal: duSetWidth(10), vertical: duSetHeight(5)),
+                    width: whereFrom == 'onlySee'
+                        ? duSetWidth(270)
+                        : duSetWidth(322),
                     decoration: BoxDecoration(
                       color: AppColors.bgGrey,
                       borderRadius: Radii.k6pxRadius,
@@ -96,9 +113,9 @@ Widget postCommentWidget(
         Row(
           children: <Widget>[
             Container(
-              margin: EdgeInsets.only(left: duSetWidth(38)),
+              margin: EdgeInsets.only(left: duSetWidth(22)),
               padding: EdgeInsets.symmetric(vertical: duSetHeight(5)),
-              width: duSetWidth(300),
+              width: whereFrom == 'onlySee' ? duSetWidth(270) : duSetWidth(322),
               child: TextLimitDisplay(
                 text: currentUserReply,
                 minLines: 3,
@@ -113,7 +130,8 @@ Widget postCommentWidget(
           ],
         ),
         Container(
-          margin: EdgeInsets.only(left: duSetWidth(38)),
+          margin:
+              EdgeInsets.only(left: duSetWidth(22), bottom: duSetHeight(10)),
           child: Row(
             children: <Widget>[
               Text(
@@ -125,33 +143,49 @@ Widget postCommentWidget(
                 ),
               ),
               Spacer(),
-              TextButton(
-                onPressed: () => onTapMore(item),
+              InkWell(
+                onTap: () => onTapMore(item),
                 child: Icon(
                   Icons.more_horiz,
                   color: AppColors.fontBlue,
                   size: duSetFontSize(14),
                 ),
               ),
-              TextButton(
-                onPressed: () => onTapOnlySee(item),
-                child: Text(
-                  '只看他',
-                  style: TextStyle(
-                    fontSize: duSetFontSize(12),
-                    fontFamily: 'Avenir',
-                    color: AppColors.fontBlue,
-                  ),
-                ),
-              ),
-              TextButton(
-                onPressed: () => onTapReply(item),
-                child: Text(
-                  '回复',
-                  style: TextStyle(
-                    fontSize: duSetFontSize(12),
-                    fontFamily: 'Avenir',
-                    color: AppColors.fontBlue,
+              articleAccount['id'] != item['account']['id']
+                  ? Padding(
+                      padding: EdgeInsets.only(
+                        left: duSetWidth(20),
+                        right: duSetWidth(20),
+                      ),
+                      child: InkWell(
+                        onTap: () => onTapOnlySee(item),
+                        child: Text(
+                          '只看Ta',
+                          textAlign: TextAlign.left,
+                          style: TextStyle(
+                            fontSize: duSetFontSize(12),
+                            fontFamily: 'Avenir',
+                            color: AppColors.fontBlue,
+                          ),
+                        ),
+                      ),
+                    )
+                  : SizedBox.shrink(),
+              Padding(
+                padding: EdgeInsets.only(
+                    left: articleAccount['id'] == item['account']['id']
+                        ? duSetWidth(20)
+                        : 0),
+                child: InkWell(
+                  onTap: () => onTapReply(item),
+                  child: Text(
+                    '回复',
+                    textAlign: TextAlign.right,
+                    style: TextStyle(
+                      fontSize: duSetFontSize(12),
+                      fontFamily: 'Avenir',
+                      color: AppColors.fontBlue,
+                    ),
                   ),
                 ),
               ),
