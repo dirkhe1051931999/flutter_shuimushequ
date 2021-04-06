@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:shuimushequ/common/type/home/album_post.dart';
 import 'package:shuimushequ/common/utils/date.dart';
 import 'package:shuimushequ/common/utils/index.dart';
 import 'package:shuimushequ/common/values/index.dart';
 import 'package:shuimushequ/common/widgets/index.dart';
 
 Widget albumPostWidget(
-    {TypeAlbumPostResponse posts, Function onTapImage, Function onTapPost}) {
-  dynamic articles = posts.data.toJson()['articles'];
+    {dynamic posts, Function onTapImage, Function onTapPost}) {
+  dynamic articles = posts['data']['articles'];
   List<Widget> _posts = [];
   for (var i = 0; i < articles.length; i++) {
     dynamic item = articles[i];

@@ -60,9 +60,3 @@ List<String> collectHtmlAHref(String html) {
   }
   return arr;
 }
-
-main(List<String> args) {
-  List a = [1];
-  a.addAll([1, 2, 3]);
-  print(a);
-}

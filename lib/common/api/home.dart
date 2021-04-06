@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:shuimushequ/common/type/home/album_post.dart';
 import 'package:shuimushequ/common/type/home/categories.dart';
-import 'package:shuimushequ/common/type/home/post.dart';
 import 'package:shuimushequ/common/utils/index.dart';
 
 class CommunityAPI {
@@ -22,7 +20,7 @@ class CommunityAPI {
   }
 
   // post
-  static Future<TypePostResponse> getPostList({
+  static Future getPostList({
     @required BuildContext context,
     @required String tabName,
     @required String tabId,
@@ -62,11 +60,11 @@ class CommunityAPI {
         params: param,
       );
     }
-    return TypePostResponse.fromJson(res);
+    return res;
   }
 
   // 图览-post
-  static Future<TypeAlbumPostResponse> getAlbumPostList({
+  static Future getAlbumPostList({
     @required BuildContext context,
     @required String tabName,
     @required String tabId,
@@ -82,6 +80,6 @@ class CommunityAPI {
       cacheDisk: cacheDisk,
       params: params,
     );
-    return TypeAlbumPostResponse.fromJson(res);
+    return res;
   }
 }

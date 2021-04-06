@@ -5,24 +5,44 @@ import 'package:flutter/material.dart';
 import 'package:shuimushequ/common/utils/screen.dart';
 import 'package:shuimushequ/common/values/colors.dart';
 import 'package:shuimushequ/common/values/radii.dart';
+import 'package:shuimushequ/global.dart';
 
 Widget UserWidget(Function onTapUsername, Function onTapAvatar) {
+  dynamic userInfo = Global.profile;
+  Map account = jsonDecode(Global.profile['set_identity']);
+  // 图像
+  String avatarUrl = account['avatarUrl'];
+  // 名字
+  String name = account['name'];
+  // 昵称
+  String nick = account['nick'];
+  // 等级
+  int level = account['level'];
+  String levelTitle = account['levelTitle'];
+  // 注册时间
+  DateTime createTime =
+      DateTime.fromMillisecondsSinceEpoch(account['createTime']);
+  // 距今多少天
+  DateTime now = DateTime.now();
+  int distanceDay = now.difference(createTime).inDays;
+  // 积分
+  int score = account['score'];
+  // 性别 0是女，1是男
+  int sex = account['gender'];
   return Container(
     padding: EdgeInsets.symmetric(
         vertical: duSetHeight(15), horizontal: duSetHeight(15)),
     child: Row(
       children: [
-        ClipRRect(
-          borderRadius: BorderRadius.circular(duSetWidth(6)),
+        ClipOval(
           child: Image.network(
-            'http://ks3-cn-beijing.ksyun.com/avatar/66885a911ee88d9a28392ff35f1d062e',
+            avatarUrl + '?w=180&h=180',
             width: duSetWidth(60),
             height: duSetHeight(60),
-            fit: BoxFit.fill,
           ),
         ),
         Padding(
-          padding: EdgeInsets.symmetric(horizontal: duSetHeight(10)),
+          padding: EdgeInsets.symmetric(horizontal: duSetWidth(10)),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -32,7 +52,7 @@ Widget UserWidget(Function onTapUsername, Function onTapAvatar) {
                 child: Row(
                   children: <Widget>[
                     Text(
-                      'hejian',
+                      name,
                       style: TextStyle(
                         color: AppColors.fontBlue,
                         fontSize: duSetFontSize(16),
@@ -48,7 +68,7 @@ Widget UserWidget(Function onTapUsername, Function onTapAvatar) {
                 ),
               ),
               Padding(
-                padding: EdgeInsets.symmetric(vertical: duSetHeight(2)),
+                padding: EdgeInsets.symmetric(vertical: duSetHeight(5)),
                 child: Row(
                   children: [
                     Padding(
@@ -85,7 +105,7 @@ Widget UserWidget(Function onTapUsername, Function onTapAvatar) {
                             left: duSetWidth(0),
                             top: duSetHeight(2),
                             child: Text(
-                              '2',
+                              level.toString(),
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                 fontSize: duSetFontSize(10),
@@ -98,7 +118,7 @@ Widget UserWidget(Function onTapUsername, Function onTapAvatar) {
                           Positioned(
                             right: duSetWidth(4),
                             child: Text(
-                              '幼苗',
+                              levelTitle,
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                 fontSize: duSetFontSize(10),
@@ -116,23 +136,24 @@ Widget UserWidget(Function onTapUsername, Function onTapAvatar) {
                       child: Stack(
                         children: [
                           Positioned(
-                              child: Container(
-                            width: duSetWidth(40),
-                            height: duSetHeight(18),
-                            decoration: BoxDecoration(
-                              color: AppColors.bgBlue,
-                              borderRadius: Radii.k10pxRadius,
+                            child: Container(
+                              width: duSetWidth(40),
+                              height: duSetHeight(18),
+                              decoration: BoxDecoration(
+                                color: AppColors.bgBlue,
+                                borderRadius: Radii.k10pxRadius,
+                              ),
                             ),
-                          )),
+                          ),
                           Positioned(
-                            left: duSetWidth(7),
+                            left: duSetWidth(4),
                             child: Text(
-                              '男用户',
+                              sex == 1 ? '小哥哥' : '小姐姐',
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                 fontSize: duSetFontSize(10),
                                 fontWeight: FontWeight.w600,
-                                fontFamily: 'Avenir',
+                                fontFamily: 'Montserrat',
                                 color: AppColors.white,
                               ),
                             ),
@@ -140,14 +161,35 @@ Widget UserWidget(Function onTapUsername, Function onTapAvatar) {
                         ],
                       ),
                     ),
+                    Padding(
+                      padding: EdgeInsets.only(left: duSetWidth(5)),
+                      child: Text(
+                        '积分：${score.toString()}',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: duSetFontSize(10),
+                          fontFamily: 'Montserrat',
+                          color: AppColors.fontBlack,
+                        ),
+                      ),
+                    ),
+                    Text(
+                      ' | 加入社区 ${distanceDay.toString()} 天',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: duSetFontSize(10),
+                        fontFamily: 'Montserrat',
+                        color: AppColors.fontBlack,
+                      ),
+                    ),
                   ],
                 ),
               ),
               Text(
-                '昵称: hejian',
+                '昵称: $nick',
                 style: TextStyle(
                   color: AppColors.subGrey,
-                  fontSize: duSetFontSize(14),
+                  fontSize: duSetFontSize(12),
                   fontFamily: 'Montserrat',
                 ),
               )

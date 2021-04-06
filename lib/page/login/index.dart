@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:shuimushequ/common/api/index.dart';
@@ -98,7 +100,7 @@ class _LoginPageState extends State<LoginPage> {
       var infoVal = info[0].split('=')[1];
       Global.saveProfile({
         "sign-time": DateTime.now().millisecondsSinceEpoch,
-        "set_identity": account.toString(),
+        "set_identity": jsonEncode(account),
         "kbs-info": infoVal,
         "kbs-key": keyVal,
       });

@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:shuimushequ/common/type/post_details/comment.dart';
 import 'package:shuimushequ/common/type/post_details/likes.dart';
-import 'package:shuimushequ/common/type/post_details/only_see.dart';
 import 'package:shuimushequ/common/type/post_details/post.dart';
 import 'package:shuimushequ/common/utils/index.dart';
 
@@ -37,7 +35,7 @@ class PostDetailsAPI {
     return TypePostDetailsLikesResponse.fromJson(res);
   }
 
-  static Future<TypePostDetailsCommentResponse> getPostDetailsComment({
+  static Future getPostDetailsComment({
     @required BuildContext context,
     bool refresh = false,
     bool cacheDisk = false,
@@ -49,10 +47,10 @@ class PostDetailsAPI {
       refresh: refresh,
       cacheDisk: cacheDisk,
     );
-    return TypePostDetailsCommentResponse.fromJson(res);
+    return res;
   }
 
-  static Future<TypePostDetailsCommentResponse> getOnlySeeComment({
+  static Future getOnlySeeComment({
     @required BuildContext context,
     bool refresh = false,
     bool cacheDisk = false,
@@ -63,8 +61,8 @@ class PostDetailsAPI {
       context: context,
       refresh: refresh,
       cacheDisk: cacheDisk,
-      params: {"articleId": params['articleId']},
+      params: params,
     );
-    return TypePostDetailsCommentResponse.fromJson(res);
+    return res;
   }
 }

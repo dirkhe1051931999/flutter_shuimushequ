@@ -45,7 +45,7 @@ Widget LinkWidget(Function onTap) {
         behavior: HitTestBehavior.opaque,
         onTap: () => onTap(item),
         child: Container(
-          height: duSetHeight(45),
+          height: duSetHeight(35),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -53,7 +53,7 @@ Widget LinkWidget(Function onTap) {
               Text(
                 item['name'],
                 style: TextStyle(
-                  fontSize: duSetFontSize(18.5),
+                  fontSize: duSetFontSize(14),
                   color: i < links.length - 1
                       ? AppColors.fontBlack
                       : AppColors.red,
@@ -63,8 +63,8 @@ Widget LinkWidget(Function onTap) {
               ),
               Icon(
                 Icons.arrow_forward_ios,
-                color: HexColor('#cccccc'),
-                size: duSetFontSize(20),
+                color: AppColors.subGrey,
+                size: duSetFontSize(18),
               ),
             ],
           ),

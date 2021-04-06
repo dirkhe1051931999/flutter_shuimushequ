@@ -62,7 +62,7 @@ class _HotPageState extends State<HotPage> with AutomaticKeepAliveClientMixin {
   Widget _buildHotTen() {
     return _tenPostList == null
         ? Container()
-        : HotTenWidget(
+        : hotTenWidget(
             posts: _tenPostList,
             onTap: (item) {
               print(item);

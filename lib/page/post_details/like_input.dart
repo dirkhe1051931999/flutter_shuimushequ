@@ -1,26 +1,77 @@
 import 'package:flutter/material.dart';
 import 'package:shuimushequ/common/utils/index.dart';
-import 'package:shuimushequ/common/values/colors.dart';
+import 'package:shuimushequ/common/values/index.dart';
+import 'package:syncfusion_flutter_sliders/sliders.dart';
 
-class maskPage extends StatefulWidget {
-  maskPage({Key key}) : super(key: key);
+class LikeInputPage extends StatefulWidget {
+  LikeInputPage({Key key}) : super(key: key);
 
   @override
-  _maskPageState createState() => _maskPageState();
+  _LikeInputPageState createState() => _LikeInputPageState();
 }
 
-class _maskPageState extends State<maskPage> {
-  FocusNode focusInputNode;
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    focusInputNode = FocusNode();
-  }
-
+class _LikeInputPageState extends State<LikeInputPage> {
+  TextEditingController _textController;
+  double _value = 0.0;
+  Map face = {
+    "-5.0": Image.asset(
+      "assets/images/-5.png",
+      width: duSetWidth(40),
+      height: duSetHeight(40),
+    ),
+    "-4.0": Image.asset(
+      "assets/images/-4.png",
+      width: duSetWidth(40),
+      height: duSetHeight(40),
+    ),
+    "-3.0": Image.asset(
+      "assets/images/-3.png",
+      width: duSetWidth(40),
+      height: duSetHeight(40),
+    ),
+    "-2.0": Image.asset(
+      "assets/images/-2.png",
+      width: duSetWidth(40),
+      height: duSetHeight(40),
+    ),
+    "-1.0": Image.asset(
+      "assets/images/-1.png",
+      width: duSetWidth(40),
+      height: duSetHeight(40),
+    ),
+    "0.0": Image.asset(
+      "assets/images/0.png",
+      width: duSetWidth(40),
+      height: duSetHeight(40),
+    ),
+    "1.0": Image.asset(
+      "assets/images/+1.png",
+      width: duSetWidth(40),
+      height: duSetHeight(40),
+    ),
+    "2.0": Image.asset(
+      "assets/images/+2.png",
+      width: duSetWidth(40),
+      height: duSetHeight(40),
+    ),
+    "3.0": Image.asset(
+      "assets/images/+3.png",
+      width: duSetWidth(40),
+      height: duSetHeight(40),
+    ),
+    "4.0": Image.asset(
+      "assets/images/+4.png",
+      width: duSetWidth(40),
+      height: duSetHeight(40),
+    ),
+    "5.0": Image.asset(
+      "assets/images/+5.png",
+      width: duSetWidth(40),
+      height: duSetHeight(40),
+    ),
+  };
   @override
   Widget build(BuildContext context) {
-    TextEditingController _textController;
     return Scaffold(
       backgroundColor: Color(0x90000000),
       body: Column(
@@ -33,14 +84,30 @@ class _maskPageState extends State<maskPage> {
               },
             ),
           ),
+          Container(child: face[_value.toString()]),
           Container(
             padding: EdgeInsets.symmetric(
               horizontal: duSetWidth(16),
               vertical: duSetWidth(5),
             ),
             color: AppColors.bgGrey,
-            child: Row(
-              children: [Text('发布评论')],
+            child: SfSlider(
+              activeColor: AppColors.bgBlue,
+              min: -5.0,
+              max: 5.0,
+              stepSize: 1,
+              interval: 1,
+              value: _value,
+              showTicks: false,
+              showLabels: true,
+              enableTooltip: false,
+              onChanged: (dynamic value) {
+                if (mounted) {
+                  setState(() {
+                    _value = value;
+                  });
+                }
+              },
             ),
           ),
           Container(
@@ -60,7 +127,7 @@ class _maskPageState extends State<maskPage> {
                 keyboardType: TextInputType.multiline,
                 onEditingComplete: () {},
                 decoration: InputDecoration(
-                  hintText: '请输入评论的内容',
+                  hintText: 'Like 是一种态度',
                   contentPadding: EdgeInsets.symmetric(
                     horizontal: duSetWidth(10),
                     vertical: duSetHeight(5),
@@ -85,15 +152,13 @@ class _maskPageState extends State<maskPage> {
             ),
             child: Row(
               children: [
-                Icon(
-                  Icons.image,
-                  size: duSetFontSize(30),
-                  color: AppColors.fontBlack,
-                ),
-                Icon(
-                  Icons.sentiment_satisfied,
-                  size: duSetFontSize(30),
-                  color: AppColors.fontBlack,
+                Text(
+                  '每次 Like 花费15积分',
+                  style: TextStyle(
+                    color: AppColors.subGrey,
+                    fontFamily: "Montserrat",
+                    fontSize: duSetFontSize(12),
+                  ),
                 ),
                 Flexible(fit: FlexFit.tight, child: SizedBox()),
                 Align(
