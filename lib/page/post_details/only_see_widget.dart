@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:shuimushequ/common/type/post_details/comment.dart';
 import 'package:shuimushequ/common/utils/index.dart';
 import 'package:shuimushequ/page/post_details/post_comment.dart';
 
 Widget onlySeeWidget(
-  TypePostDetailsCommentResponse _onlySeeResponse, {
+  dynamic _onlySeeResponse, {
   Function onTapMore,
   Function onTapReply,
   Function onTapUser,

@@ -224,9 +224,9 @@ class HttpUtil {
     Map<String, dynamic> headers;
     int now = DateTime.now().millisecondsSinceEpoch;
     int signTime = Global.profile['sign-time'];
-    // 2505600000ms=>29天
-
-    if (now > (signTime + 2505600000)) {
+    // 8280000ms=>23小时
+    // deleteAuthentication();
+    if (now > (signTime + 8280000)) {
       // 29天cookie 过期
       deleteAuthentication();
     }

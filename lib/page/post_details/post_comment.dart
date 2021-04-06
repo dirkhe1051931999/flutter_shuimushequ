@@ -1,20 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:html/parser.dart';
-import 'package:shuimushequ/common/type/post_details/comment.dart';
 import 'package:shuimushequ/common/utils/date.dart';
 import 'package:shuimushequ/common/utils/index.dart';
 import 'package:shuimushequ/common/values/index.dart';
 import 'package:shuimushequ/common/widgets/text_limt_display.dart';
 
 Widget postCommentWidget(
-  TypePostDetailsCommentResponse post, {
+  dynamic post, {
   String whereFrom = 'comment',
   Function onTapMore,
   Function onTapReply,
   Function onTapOnlySee,
   Function onTapUser,
 }) {
-  List comments = post.data.toJson()['articles'];
+  List comments = post['data']['articles'];
   dynamic articleAccount = comments[0]['account'];
   List<Widget> _comments = [];
   for (var i = 1; i < comments.length; i++) {

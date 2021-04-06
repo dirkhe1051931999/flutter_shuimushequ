@@ -44,7 +44,7 @@ class UserAPI {
     var res = await HttpUtil().get(
       'api/account/${params['name']}/mixlogs',
       context: context,
-      params: {'page': params['pageNum']},
+      params: params,
     );
     return res;
   }

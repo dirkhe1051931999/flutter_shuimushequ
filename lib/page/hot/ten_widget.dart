@@ -4,7 +4,7 @@ import 'package:shuimushequ/common/utils/date.dart';
 import 'package:shuimushequ/common/utils/index.dart';
 import 'package:shuimushequ/common/values/index.dart';
 
-Widget HotTenWidget({
+Widget hotTenWidget({
   TypeHotTenResponse posts,
   Function onTap,
 }) {

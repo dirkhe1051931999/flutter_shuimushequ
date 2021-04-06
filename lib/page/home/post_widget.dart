@@ -1,20 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:shuimushequ/common/type/home/post.dart';
 import 'package:shuimushequ/common/utils/date.dart';
 import 'package:shuimushequ/common/utils/index.dart';
 import 'package:shuimushequ/common/values/index.dart';
 import 'package:shuimushequ/page/home/album_post_widget.dart';
 
 Widget postWidget({
-  TypePostResponse posts,
+  dynamic posts,
   bool isPictureMode = false,
   String categoriesType,
   String categoriesId,
   Function onTap,
   Function onTapImage,
 }) {
-  List adList = posts.data.toJson()['adList'];
-  List topics = posts.data.toJson()['topics'];
+  List adList = posts['data']['adList'];
+  List topics = posts['data']['topics'];
   List<Widget> _posts = [];
   for (var i = 0; i < topics.length; i++) {
     dynamic item = topics[i];
@@ -192,7 +191,7 @@ Widget postWidget({
                   Flexible(
                     flex: 0,
                     child: Text(
-                      item['board']['title'] ?? '未知',
+                      item['board']['title'] ?? '水木社区',
                       textAlign: TextAlign.right,
                       style: TextStyle(
                         color: AppColors.fontBlue,

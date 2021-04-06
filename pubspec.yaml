@@ -80,6 +80,9 @@ dependencies:
   html: ^0.15.0
   # utils
   common_utils: ^2.0.2
+  # 滑块
+  syncfusion_flutter_sliders: ^19.1.54-beta
+
 
 dev_dependencies:
   flutter_test:

@@ -6,7 +6,6 @@ import 'package:provider/provider.dart';
 import 'package:shuimushequ/common/api/post_details.dart';
 import 'package:shuimushequ/common/provider/index.dart';
 import 'package:shuimushequ/common/router/application.dart';
-import 'package:shuimushequ/common/type/post_details/comment.dart';
 import 'package:shuimushequ/common/type/post_details/likes.dart';
 import 'package:shuimushequ/common/type/post_details/post.dart';
 import 'package:shuimushequ/common/utils/hexColor.dart';
@@ -14,7 +13,8 @@ import 'package:shuimushequ/common/utils/index.dart';
 import 'package:shuimushequ/common/values/colors.dart';
 import 'package:shuimushequ/common/values/index.dart';
 import 'package:shuimushequ/common/widgets/index.dart';
-import 'package:shuimushequ/page/post_details/mask_input.dart';
+import 'package:shuimushequ/page/post_details/like_input.dart';
+import 'package:shuimushequ/page/post_details/comment_input.dart';
 import 'package:shuimushequ/page/post_details/only_see_widget.dart';
 import 'package:shuimushequ/page/post_details/post_comment.dart';
 import 'package:shuimushequ/page/post_details/post_content.dart';
@@ -30,8 +30,8 @@ class PostDetailPage extends StatefulWidget {
 class _PostDetailPageState extends State<PostDetailPage> {
   TypePostDetailsResponse _postDetails;
   TypePostDetailsLikesResponse _postDetailsLikes;
-  TypePostDetailsCommentResponse _postDetailsComment;
-  TypePostDetailsCommentResponse _onlySeeResponse;
+  dynamic _postDetailsComment;
+  dynamic _onlySeeResponse;
   ScrollController _scrollController = ScrollController();
   bool _getMoreLikes = false;
   bool isNoMoreData = false;
@@ -89,7 +89,7 @@ class _PostDetailPageState extends State<PostDetailPage> {
         "mode": commentMode,
       },
     );
-    List articles = _postDetailsComment.data.toJson()['articles'];
+    List articles = _postDetailsComment['data']['articles'];
     if (articles.length < commentPageSize) {
       isNoMoreData = true;
     }
@@ -109,7 +109,7 @@ class _PostDetailPageState extends State<PostDetailPage> {
         "mode": commentMode,
       },
     );
-    List articles = _postDetailsComment.data.toJson()['articles'];
+    List articles = _postDetailsComment['data']['articles'];
     if (articles.length < commentPageSize) {
       isNoMoreData = true;
     }
@@ -118,7 +118,7 @@ class _PostDetailPageState extends State<PostDetailPage> {
   _loadMoreData() async {
     SmartDialog.showLoading();
     isMoreDataing = true;
-    TypePostDetailsCommentResponse more;
+    dynamic more;
     more = await PostDetailsAPI.getPostDetailsComment(
       context: context,
       params: {
@@ -128,8 +128,8 @@ class _PostDetailPageState extends State<PostDetailPage> {
         "mode": commentMode,
       },
     );
-    _postDetailsComment.data.articles.addAll(more.data.articles);
-    List articles = _postDetailsComment.data.toJson()['articles'];
+    _postDetailsComment['data']['articles'].addAll(more['data']['articles']);
+    List articles = _postDetailsComment['data']['articles'];
     if (articles.length < commentPageSize) {
       isNoMoreData = true;
       SmartDialog.showToast('我也是有底线的~');
@@ -215,7 +215,7 @@ class _PostDetailPageState extends State<PostDetailPage> {
                 bottom: duSetHeight(50),
               ),
               child: _postDetails == null
-                  ? postContentLoading()
+                  ? Text('loading...')
                   : Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
@@ -247,7 +247,36 @@ class _PostDetailPageState extends State<PostDetailPage> {
                                 child: postLikeWidget(
                                   _postDetailsLikes,
                                   _getMoreLikes,
-                                  onTapLike: (item) {},
+                                  onTapLike: (item) {
+                                    Navigator.of(context).push(
+                                      PageRouteBuilder(
+                                        opaque: false,
+                                        pageBuilder: (context, animation,
+                                            secondaryAnimation) {
+                                          return LikeInputPage();
+                                        },
+                                        transitionsBuilder: (
+                                          BuildContext context,
+                                          Animation<double> animation1,
+                                          Animation<double> animation2,
+                                          Widget child,
+                                        ) {
+                                          ///  渐变过渡
+                                          return FadeTransition(
+                                            ///渐变过渡 0.0-1.0
+                                            opacity: Tween(begin: 0.0, end: 1.0)
+                                                .animate(
+                                              CurvedAnimation(
+                                                parent: animation1,
+                                                curve: Curves.fastOutSlowIn,
+                                              ),
+                                            ),
+                                            child: child,
+                                          );
+                                        },
+                                      ),
+                                    );
+                                  },
                                   onTapMore: (item) async {
                                     if (_getMoreLikes == false) {
                                       RenderBox renderBox = positionLikeKey
@@ -284,7 +313,74 @@ class _PostDetailPageState extends State<PostDetailPage> {
                                   ),
                                   postCommentWidget(
                                     _postDetailsComment,
-                                    onTapMore: (item) {},
+                                    onTapMore: (item) {
+                                      SmartDialog.show(
+                                        alignmentTemp: Alignment.bottomCenter,
+                                        clickBgDismissTemp: true,
+                                        widget: Container(
+                                          height: duSetHeight(88),
+                                          decoration: BoxDecoration(
+                                            color: AppColors.white,
+                                            borderRadius: BorderRadius.only(
+                                              topLeft: Radius.circular(10),
+                                              topRight: Radius.circular(10),
+                                            ),
+                                          ),
+                                          child: Row(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Column(
+                                                children: [
+                                                  InkWell(
+                                                    onTap: () {},
+                                                    child: Container(
+                                                      alignment:
+                                                          Alignment.center,
+                                                      height: duSetHeight(42),
+                                                      child: Text(
+                                                        '发消息',
+                                                        style: TextStyle(
+                                                          color: AppColors
+                                                              .fontBlack,
+                                                          fontSize:
+                                                              duSetFontSize(14),
+                                                          fontFamily:
+                                                              'Montserrat',
+                                                          height: 1,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  // Divider(),
+                                                  InkWell(
+                                                    onTap: () {},
+                                                    child: Container(
+                                                      alignment:
+                                                          Alignment.center,
+                                                      height: duSetHeight(42),
+                                                      child: Text(
+                                                        '拉黑',
+                                                        style: TextStyle(
+                                                          color: AppColors.red,
+                                                          fontSize:
+                                                              duSetFontSize(14),
+                                                          fontFamily:
+                                                              'Montserrat',
+                                                          height: 1,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  )
+                                                ],
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                      );
+                                    },
                                     onTapReply: (item) {},
                                     onTapOnlySee: (item) async {
                                       SmartDialog.showLoading();
@@ -297,8 +393,8 @@ class _PostDetailPageState extends State<PostDetailPage> {
                                         },
                                       );
 
-                                      if (_onlySeeResponse
-                                              .data.articles.length ==
+                                      if (_onlySeeResponse['data']['articles']
+                                              .length ==
                                           1) {
                                         SmartDialog.showToast('只有这一条哦~');
                                         SmartDialog.dismiss();
@@ -367,7 +463,7 @@ class _PostDetailPageState extends State<PostDetailPage> {
                 children: [
                   Container(
                     child: Text(
-                      '评论共 ${_postDetailsComment.data.toJson()['pager']['totalPages']} 页',
+                      '评论共 ${_postDetailsComment['data']['pager']['totalPages']} 页',
                       style: TextStyle(
                         color: AppColors.subGrey,
                         fontFamily: 'Montserrat',
@@ -428,7 +524,7 @@ class _PostDetailPageState extends State<PostDetailPage> {
                 PageRouteBuilder(
                   opaque: false,
                   pageBuilder: (context, animation, secondaryAnimation) {
-                    return maskPage();
+                    return CommentInputPage();
                   },
                   transitionsBuilder: (
                     BuildContext context,

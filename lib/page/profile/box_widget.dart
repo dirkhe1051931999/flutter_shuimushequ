@@ -108,16 +108,14 @@ Widget BoxWidget(Function onTap, {bool isSunDay, bool isPictureMode}) {
             ),
             Padding(
               padding: EdgeInsets.only(
-                top: duSetHeight(10),
+                top: duSetHeight(5),
               ),
               child: Text(
                 item['name'],
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: AppColors.fontBlack,
-                  fontSize: item['name'].length == 3
-                      ? duSetFontSize(15)
-                      : duSetFontSize(12),
+                  fontSize: duSetFontSize(12),
                   fontFamily: 'Montserrat',
                 ),
               ),
@@ -130,10 +128,10 @@ Widget BoxWidget(Function onTap, {bool isSunDay, bool isPictureMode}) {
   return Container(
     padding: EdgeInsets.symmetric(
       vertical: duSetHeight(15),
-      horizontal: duSetHeight(15),
+      // horizontal: duSetHeight(15),
     ),
     child: Wrap(
-      spacing: duSetWidth(20),
+      spacing: duSetWidth(6),
       runSpacing: duSetWidth(20),
       alignment: WrapAlignment.start,
       runAlignment: WrapAlignment.center,

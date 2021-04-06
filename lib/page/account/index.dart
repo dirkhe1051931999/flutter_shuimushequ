@@ -1,10 +1,10 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:shuimushequ/common/api/index.dart';
 import 'package:shuimushequ/common/utils/index.dart';
 import 'package:shuimushequ/common/values/index.dart';
-import 'package:shuimushequ/common/widgets/index.dart';
 import 'package:shuimushequ/page/account/timeline_widget.dart';
 import 'package:shuimushequ/page/account/userinfo_widget.dart';
 
@@ -22,11 +22,22 @@ class _AccountPageState extends State<AccountPage> {
   dynamic _account;
   List<dynamic> _content;
   int pageNum = 1;
+  bool isNoMoreData = false;
+  bool isMoreDataing = false;
   ScrollController _scrollController = ScrollController();
   @override
   void initState() {
     super.initState();
     _getData();
+    _scrollController.addListener(() {
+      if (_scrollController.position.pixels ==
+              _scrollController.position.maxScrollExtent &&
+          !isNoMoreData &&
+          !isMoreDataing) {
+        pageNum++;
+        _loadMoreData();
+      }
+    });
   }
 
   _getData() async {
@@ -34,9 +45,29 @@ class _AccountPageState extends State<AccountPage> {
       context: context,
       params: {"name": widget.name, "page": pageNum},
     );
-    print(_userCommentLogs);
     _account = _userCommentLogs['data']['account'];
     _content = _userCommentLogs['data']['content'];
+    if (mounted) {
+      setState(() {});
+    }
+  }
+
+  _loadMoreData() async {
+    SmartDialog.showLoading();
+    isMoreDataing = true;
+    dynamic more = await UserAPI.getUserTimeLineData(
+      context: context,
+      params: {"name": widget.name, "page": pageNum},
+    );
+
+    var content = more['data']['content'];
+    _content.addAll(content);
+    if (content.length == 0) {
+      isNoMoreData = true;
+      SmartDialog.showToast('我也是有底线的~');
+    }
+    isMoreDataing = false;
+    SmartDialog.dismiss();
     if (mounted) {
       setState(() {});
     }
@@ -104,15 +135,17 @@ class _AccountPageState extends State<AccountPage> {
                   child: Opacity(
                     //悬浮的内容
                     opacity: 0.5,
-                    child: Image.asset(
-                      "assets/images/feature-1.png",
-                      fit: BoxFit.cover,
-                    ),
+                    child: _account != null
+                        ? Image.network(
+                            _account['k3sUrl'] + '?w=180&h=180',
+                            fit: BoxFit.cover,
+                          )
+                        : null,
                   ),
                 ),
                 Positioned(
-                  left: 100,
-                  top: 200,
+                  left: duSetWidth(15),
+                  top: duSetHeight(88),
                   child: _buildUserInfo(),
                 )
               ],
@@ -135,17 +168,9 @@ class _AccountPageState extends State<AccountPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: CustomScrollView(
+        controller: _scrollController,
         slivers: <Widget>[
           _buildAppbar(),
-          SliverList(
-              // Use a delegate to build items as they're scrolled on screen.
-              delegate: SliverChildBuilderDelegate(
-            // The builder function returns a ListTile with a title that
-            // displays the index of the current item.
-            (context, index) => ListTile(title: Text('Item #$index')),
-            // Builds 1000 ListTiles
-            childCount: 20,
-          )),
           SliverToBoxAdapter(
             child: _buildUserTimeline(),
           )

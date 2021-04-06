@@ -8,9 +8,7 @@ import 'package:provider/provider.dart';
 import 'package:shuimushequ/common/api/index.dart';
 import 'package:shuimushequ/common/provider/index.dart';
 import 'package:shuimushequ/common/router/application.dart';
-import 'package:shuimushequ/common/type/home/album_post.dart';
 import 'package:shuimushequ/common/type/home/categories.dart';
-import 'package:shuimushequ/common/type/home/post.dart';
 import 'package:shuimushequ/common/type/user/my.dart';
 import 'package:shuimushequ/common/utils/date.dart';
 import 'package:shuimushequ/common/utils/index.dart';
@@ -38,8 +36,8 @@ class _HomePageState extends State<HomePage>
   int pageNum = 1;
   AppState _appState;
   TypeCategoriesResponse _categories;
-  TypeAlbumPostResponse _albumPostList;
-  TypePostResponse _postList;
+  dynamic _albumPostList;
+  dynamic _postList;
   EasyRefreshController _controller;
   ScrollController _customScrollViewController = ScrollController();
   bool isRefreshing = false;
@@ -126,14 +124,14 @@ class _HomePageState extends State<HomePage>
     SmartDialog.showLoading();
     isMoreDataing = true;
     if (_categoriesType == 'album') {
-      TypeAlbumPostResponse more;
+      dynamic more;
       more = await CommunityAPI.getAlbumPostList(
         tabName: _categoriesType,
         tabId: _categoriesId,
         context: context,
         params: {"page": pageNum, "size": pageSize},
       );
-      _albumPostList.data.articles.addAll(more.data.articles);
+      _albumPostList['data']['articles'].addAll(more['data']['articles']);
       List articles = more.data.toJson()['articles'];
       if (articles.length == 0) {
         isNoMoreData = true;
@@ -142,14 +140,14 @@ class _HomePageState extends State<HomePage>
       SmartDialog.dismiss();
       isMoreDataing = false;
     } else {
-      TypePostResponse more;
+      dynamic more;
       more = await CommunityAPI.getPostList(
         tabName: _categoriesType,
         tabId: _categoriesId,
         context: context,
         params: {"page": pageNum, "size": pageSize},
       );
-      _postList.data.topics.addAll(more.data.topics);
+      _postList['data']['topics'].addAll(more['data']['topics']);
       List topics = more.data.toJson()['topics'];
       if (topics.length == 0) {
         isNoMoreData = true;
