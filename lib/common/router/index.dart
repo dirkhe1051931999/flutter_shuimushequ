@@ -11,6 +11,7 @@ class Routes {
   static String search = '/search';
   static String account = '/account/:id/:name';
   static String board = '/board/:id/:name';
+  static String board_search = '/board_search/:id/:name';
   static void configureRoutes(FluroRouter router) {
     router.notFoundHandler = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) {
@@ -26,5 +27,6 @@ class Routes {
     router.define(postDetailsPage, handler: postDetailPageHandler);
     router.define(account, handler: accountPageHandler);
     router.define(board, handler: boardPageHandler);
+    router.define(board_search, handler: boardSearchPageHandler);
   }
 }

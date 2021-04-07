@@ -24,6 +24,7 @@ Widget accountWidget({
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
             GestureDetector(
+              behavior: HitTestBehavior.opaque,
               onTap: () => onTapUser(item),
               child: Row(
                 children: <Widget>[

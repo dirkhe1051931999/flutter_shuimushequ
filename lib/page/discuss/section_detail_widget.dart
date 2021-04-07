@@ -17,7 +17,7 @@ Widget SectionDetailWidget({
   _discussDetail.add(
     GestureDetector(
       behavior: HitTestBehavior.opaque,
-      onTap: () => onTapHot('today hot'),
+      onTap: () => onTapHot(boards[0]),
       child: Container(
         width: duSetWidth(235),
         height: duSetHeight(50),
@@ -61,7 +61,7 @@ Widget SectionDetailWidget({
           width: duSetWidth(235),
           padding: EdgeInsets.symmetric(
             horizontal: duSetWidth(15),
-            vertical: duSetHeight(15),
+            vertical: duSetHeight(10),
           ),
           margin: EdgeInsets.only(bottom: duSetWidth(10)),
           decoration: BoxDecoration(
@@ -107,20 +107,7 @@ Widget SectionDetailWidget({
                                 ),
                               ),
                             )
-                          : Container(
-                              width: duSetWidth(54.5),
-                              padding: EdgeInsets.only(left: duSetWidth(5)),
-                              child: Text(
-                                item['name'] ?? '',
-                                overflow: TextOverflow.ellipsis,
-                                maxLines: 1,
-                                style: TextStyle(
-                                  fontSize: duSetFontSize(12),
-                                  color: AppColors.subGrey,
-                                  fontFamily: 'Avenir',
-                                ),
-                              ),
-                            ),
+                          : SizedBox.shrink()
                     ],
                   ),
                   item['type'] == 0
@@ -135,14 +122,15 @@ Widget SectionDetailWidget({
                             )
                           ],
                         )
-                      : Text(''),
+                      : SizedBox.shrink(),
                 ],
               ),
-              Icon(
-                Icons.arrow_forward_ios_sharp,
-                color: HexColor('#cccccc'),
-                size: duSetFontSize(20),
-              ),
+              if (item['type'] != 0)
+                Icon(
+                  Icons.arrow_forward_ios_sharp,
+                  color: HexColor('#cccccc'),
+                  size: duSetFontSize(15),
+                ),
             ],
           ),
         ),

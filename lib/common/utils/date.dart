@@ -72,3 +72,9 @@ String duTimeLineFormat2(DateTime dt) {
   var str = dtFormat.format(dt);
   return str;
 }
+
+String duTimeLineFormat3(DateTime dt) {
+  final dtFormat = new DateFormat('yyyy-MM-dd hh:mm:ss');
+  var str = dtFormat.format(dt);
+  return str;
+}

@@ -37,4 +37,20 @@ class DiscussAPI {
     );
     return TypeDiscussSectionDetailResponse.fromJson(res);
   }
+
+  static Future getSectionDetailHot({
+    @required BuildContext context,
+    bool refresh = false,
+    bool cacheDisk = false,
+    dynamic params,
+  }) async {
+    var res = await HttpUtil().get(
+      'api/hot/section',
+      context: context,
+      refresh: refresh,
+      cacheDisk: cacheDisk,
+      params: params,
+    );
+    return res;
+  }
 }

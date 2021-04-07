@@ -5,6 +5,7 @@ import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:provider/provider.dart';
 import 'package:shuimushequ/common/api/index.dart';
 import 'package:shuimushequ/common/provider/index.dart';
+import 'package:shuimushequ/common/router/application.dart';
 import 'package:shuimushequ/common/utils/date.dart';
 import 'package:shuimushequ/common/utils/index.dart';
 import 'package:shuimushequ/common/values/index.dart';
@@ -65,7 +66,8 @@ class _HotPageState extends State<HotPage> with AutomaticKeepAliveClientMixin {
         : hotTenWidget(
             posts: _tenPostList,
             onTap: (item) {
-              print(item);
+              Application.router
+                  .navigateTo(context, '/post_details/${item['id']}');
             },
           );
   }
@@ -107,7 +109,8 @@ class _HotPageState extends State<HotPage> with AutomaticKeepAliveClientMixin {
                 child: HotBoardWidget(
                   boards: _boardList,
                   onTap: (item) {
-                    print(item);
+                    Application.router.navigateTo(
+                        context, '/board/${item['id']}/${item['title']}');
                   },
                 ),
               ),

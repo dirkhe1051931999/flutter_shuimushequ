@@ -63,4 +63,20 @@ class BoardAPI {
     );
     return res;
   }
+
+  static Future searchArticleData({
+    @required BuildContext context,
+    bool refresh = false,
+    bool cacheDisk = false,
+    Map<String, dynamic> params,
+  }) async {
+    var res = await HttpUtil().get(
+      'api/search/article',
+      context: context,
+      refresh: refresh,
+      cacheDisk: cacheDisk,
+      params: params,
+    );
+    return res;
+  }
 }

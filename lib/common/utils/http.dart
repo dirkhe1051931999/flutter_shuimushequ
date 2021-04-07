@@ -5,6 +5,8 @@ import 'package:dio/dio.dart';
 import 'package:cookie_jar/cookie_jar.dart';
 import 'package:dio_cookie_manager/dio_cookie_manager.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
+import 'package:shuimushequ/common/router/application.dart';
 import 'package:shuimushequ/common/utils/authentication.dart';
 import 'package:shuimushequ/common/utils/index.dart';
 import 'package:shuimushequ/common/values/index.dart';
@@ -75,23 +77,14 @@ class HttpUtil {
           return options; //continue
         },
         onResponse: (Response response) {
+          if (response.data['code'] == 2) {
+            toastInfo(msg: '权限不足');
+            throw ('error');
+          }
           return response; // continue
         },
         onError: (DioError e) {
-          ErrorEntity eInfo = createErrorEntity(e);
-          toastInfo(msg: eInfo.message);
-          var context = e.request.extra['context'];
-          if (context != null) {
-            switch (eInfo.code) {
-              case 401:
-                // goLoginPage(context);
-                break;
-              default:
-                toastInfo(msg: '网络异常');
-                break;
-            }
-          }
-          return createErrorEntity(e);
+          return createErrorMessage('-1');
         },
       ),
     );
@@ -116,97 +109,12 @@ class HttpUtil {
    * error统一处理
    */
   // 错误信息
-  ErrorEntity createErrorEntity(DioError error) {
-    switch (error.type) {
-      case DioErrorType.CANCEL:
-        {
-          return ErrorEntity(code: -1, message: "请求取消");
-        }
-        break;
-      case DioErrorType.CONNECT_TIMEOUT:
-        {
-          return ErrorEntity(code: -1, message: "连接超时");
-        }
-        break;
-      case DioErrorType.SEND_TIMEOUT:
-        {
-          return ErrorEntity(code: -1, message: "请求超时");
-        }
-        break;
-      case DioErrorType.RECEIVE_TIMEOUT:
-        {
-          return ErrorEntity(code: -1, message: "响应超时");
-        }
-        break;
-      case DioErrorType.RESPONSE:
-        {
-          try {
-            int errCode = error.response.statusCode;
-            // String errMsg = error.response.statusMessage;
-            // return ErrorEntity(code: errCode, message: errMsg);
-            switch (errCode) {
-              case 400:
-                {
-                  return ErrorEntity(code: errCode, message: "请求语法错误");
-                }
-                break;
-              case 401:
-                {
-                  return ErrorEntity(code: errCode, message: "没有权限");
-                }
-                break;
-              case 403:
-                {
-                  return ErrorEntity(code: errCode, message: "服务器拒绝执行");
-                }
-                break;
-              case 404:
-                {
-                  return ErrorEntity(code: errCode, message: "无法连接服务器");
-                }
-                break;
-              case 405:
-                {
-                  return ErrorEntity(code: errCode, message: "请求方法被禁止");
-                }
-                break;
-              case 500:
-                {
-                  return ErrorEntity(code: errCode, message: "服务器内部错误");
-                }
-                break;
-              case 502:
-                {
-                  return ErrorEntity(code: errCode, message: "无效的请求");
-                }
-                break;
-              case 503:
-                {
-                  return ErrorEntity(code: errCode, message: "服务器挂了");
-                }
-                break;
-              case 505:
-                {
-                  return ErrorEntity(code: errCode, message: "不支持HTTP协议请求");
-                }
-                break;
-              default:
-                {
-                  // return ErrorEntity(code: errCode, message: "未知错误");
-                  return ErrorEntity(
-                      code: errCode, message: error.response.statusMessage);
-                }
-            }
-          } on Exception catch (_) {
-            return ErrorEntity(code: -1, message: "未知错误");
-          }
-        }
-        break;
-      default:
-        {
-          return ErrorEntity(code: -1, message: error.message);
-        }
-    }
+  String createErrorMessage(String errorcode) {
+    dynamic error = {
+      "2": '无权限',
+      "-1": '网络异常',
+    };
+    return error[errorcode] ?? '网络异常';
   }
 
   /*
@@ -282,7 +190,7 @@ class HttpUtil {
       );
       return response.data;
     } on DioError catch (e) {
-      throw createErrorEntity(e);
+      toastInfo(msg: e.message);
     }
   }
 
@@ -325,7 +233,7 @@ class HttpUtil {
         "headers": response.headers,
       };
     } on DioError catch (e) {
-      throw createErrorEntity(e);
+      throw createErrorMessage('-1');
     }
   }
 
@@ -350,7 +258,7 @@ class HttpUtil {
           data: params, options: requestOptions, cancelToken: cancelToken);
       return (response.data);
     } on DioError catch (e) {
-      throw createErrorEntity(e);
+      throw createErrorMessage('-1');
     }
   }
 
@@ -374,7 +282,7 @@ class HttpUtil {
           data: params, options: requestOptions, cancelToken: cancelToken);
       return (response.data);
     } on DioError catch (e) {
-      throw createErrorEntity(e);
+      throw createErrorMessage('-1');
     }
   }
 
@@ -399,7 +307,7 @@ class HttpUtil {
           data: params, options: requestOptions, cancelToken: cancelToken);
       return (response.data);
     } on DioError catch (e) {
-      throw createErrorEntity(e);
+      throw createErrorMessage('-1');
     }
   }
 
@@ -426,19 +334,7 @@ class HttpUtil {
           cancelToken: cancelToken);
       return (response.data);
     } on DioError catch (e) {
-      throw createErrorEntity(e);
+      throw createErrorMessage('-1');
     }
-  }
-}
-
-// 异常处理
-class ErrorEntity implements Exception {
-  int code;
-  String message;
-  ErrorEntity({this.code, this.message});
-
-  String toString() {
-    if (message == null) return "Exception";
-    return "Exception: code $code, $message";
   }
 }
