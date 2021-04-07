@@ -4,8 +4,12 @@ import 'package:shuimushequ/common/utils/index.dart';
 import 'package:shuimushequ/common/values/index.dart';
 import 'package:shuimushequ/common/widgets/index.dart';
 
-Widget albumPostWidget(
-    {dynamic posts, Function onTapImage, Function onTapPost}) {
+Widget albumPostWidget({
+  dynamic posts,
+  Function onTapImage,
+  Function onTapPost,
+  Function onTapBoard,
+}) {
   dynamic articles = posts['data']['articles'];
   List<Widget> _posts = [];
   for (var i = 0; i < articles.length; i++) {
@@ -102,14 +106,17 @@ Widget albumPostWidget(
                       ),
                     ),
                     Spacer(),
-                    Text(
-                      item['board']['title'],
-                      style: TextStyle(
-                        fontSize: duSetFontSize(14),
-                        fontFamily: 'Montserrat',
-                        color: AppColors.fontBlue,
+                    InkWell(
+                      onTap: () => onTapBoard(item),
+                      child: Text(
+                        item['board']['title'],
+                        style: TextStyle(
+                          fontSize: duSetFontSize(14),
+                          fontFamily: 'Montserrat',
+                          color: AppColors.fontBlue,
+                        ),
                       ),
-                    )
+                    ),
                   ],
                 ),
               ),

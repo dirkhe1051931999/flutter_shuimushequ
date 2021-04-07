@@ -37,7 +37,7 @@ Widget blueAppBar({
 
 Widget cardListSkeleton() {
   return PKCardPageSkeleton(
-    totalLines: 5,
+    totalLines: 8,
   );
 }
 
