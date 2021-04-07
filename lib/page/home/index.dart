@@ -198,6 +198,10 @@ class _HomePageState extends State<HomePage>
                 Application.router
                     .navigateTo(context, '/post_details/${item['topicId']}');
               },
+              onTapBoard: (item) {
+                Application.router.navigateTo(context,
+                    '/board/${item['board']['id']}/${item['board']['title']}');
+              },
             );
     } else {
       return _postList == null
@@ -215,6 +219,10 @@ class _HomePageState extends State<HomePage>
                 _appState.setImageViewCurrentIndex(index);
                 _appState.setImageViewAllData(images);
                 Application.router.navigateTo(context, '/imageView');
+              },
+              onTapBoard: (item) {
+                Application.router.navigateTo(context,
+                    '/board/${item['board']['id']}/${item['board']['title']}');
               },
             );
     }

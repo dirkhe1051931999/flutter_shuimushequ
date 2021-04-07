@@ -33,10 +33,10 @@ class Global {
   /// 包信息
   static PackageInfo packageInfo;
 
-  /// 是否第一次登陆
+  /// 是否第一次登录
   static bool isFirstOpen = true;
 
-  /// 是否离线登陆
+  /// 是否离线登录
   static bool isOfflineLogin = false;
 
   /// 应用状态

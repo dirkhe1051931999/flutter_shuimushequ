@@ -43,7 +43,7 @@ class _LoginPageState extends State<LoginPage> {
     return blueAppBar(
       context: context,
       title: Text(
-        '登陆',
+        '登录',
         style: TextStyle(
           color: AppColors.white,
           fontFamily: 'Montserrat',
@@ -57,7 +57,7 @@ class _LoginPageState extends State<LoginPage> {
         iconSize: duSetFontSize(30),
         onPressed: () {
           if (Global.isOfflineLogin == false) {
-            SmartDialog.showToast('您还没有登陆');
+            SmartDialog.showToast('您还没有登录');
             Application.router.navigateTo(context, '/');
           } else {
             Navigator.pop(context);
@@ -106,7 +106,7 @@ class _LoginPageState extends State<LoginPage> {
       });
       focusInputUsernameNode.unfocus();
       focusInputPasswordNode.unfocus();
-      SmartDialog.showToast('登陆成功');
+      SmartDialog.showToast('登录成功');
       Application.router.navigateTo(context, '/');
     }
   }
@@ -195,7 +195,7 @@ class _LoginPageState extends State<LoginPage> {
             isPassword: true,
             focusNode: focusInputPasswordNode,
           ),
-          // 登陆按钮
+          // 登录按钮
           Padding(
             padding: EdgeInsets.only(top: duSetHeight(20)),
             child: btnFlatButtonWidget(

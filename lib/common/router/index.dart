@@ -10,6 +10,7 @@ class Routes {
   static String imageView = '/imageView';
   static String search = '/search';
   static String account = '/account/:id/:name';
+  static String board = '/board/:id/:name';
   static void configureRoutes(FluroRouter router) {
     router.notFoundHandler = Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) {
@@ -24,5 +25,6 @@ class Routes {
     router.define(welcome, handler: welcomePageHandler);
     router.define(postDetailsPage, handler: postDetailPageHandler);
     router.define(account, handler: accountPageHandler);
+    router.define(board, handler: boardPageHandler);
   }
 }

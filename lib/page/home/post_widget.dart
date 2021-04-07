@@ -11,6 +11,7 @@ Widget postWidget({
   String categoriesId,
   Function onTap,
   Function onTapImage,
+  Function onTapBoard,
 }) {
   List adList = posts['data']['adList'];
   List topics = posts['data']['topics'];
@@ -190,13 +191,16 @@ Widget postWidget({
                   Spacer(),
                   Flexible(
                     flex: 0,
-                    child: Text(
-                      item['board']['title'] ?? '水木社区',
-                      textAlign: TextAlign.right,
-                      style: TextStyle(
-                        color: AppColors.fontBlue,
-                        fontSize: duSetFontSize(12),
-                        fontFamily: 'Avenir',
+                    child: InkWell(
+                      onTap: () => onTapBoard(item),
+                      child: Text(
+                        item['board']['title'] ?? '水木社区',
+                        textAlign: TextAlign.right,
+                        style: TextStyle(
+                          color: AppColors.fontBlue,
+                          fontSize: duSetFontSize(12),
+                          fontFamily: 'Avenir',
+                        ),
                       ),
                     ),
                   ),

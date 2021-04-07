@@ -228,7 +228,6 @@ class _PostDetailPageState extends State<PostDetailPage> {
                                 .navigateTo(context, '/imageView');
                           },
                           onTapUser: (id, name) {
-                            print(name);
                             Application.router
                                 .navigateTo(context, '/account/$id/$name');
                           },
