@@ -4,8 +4,12 @@ import 'package:shuimushequ/common/utils/hexColor.dart';
 import 'package:shuimushequ/common/utils/index.dart';
 import 'package:shuimushequ/common/values/colors.dart';
 
-Widget SectionWidget(
-    {TypeDiscussSectionResponse discuss, Function onTap, id: String}) {
+Widget SectionWidget({
+  TypeDiscussSectionResponse discuss,
+  Function onTap,
+  id: String,
+  double height,
+}) {
   List sections = discuss.toJson()['data']['sections'];
   List<Widget> _discuss = [];
   List<IconData> icons = [
@@ -71,7 +75,11 @@ Widget SectionWidget(
       ),
     );
   }
-  return Column(
-    children: _discuss,
+  return Container(
+    height: duSetHeight(height),
+    color: AppColors.white,
+    child: Column(
+      children: _discuss,
+    ),
   );
 }

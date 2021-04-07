@@ -132,7 +132,7 @@ class _HomePageState extends State<HomePage>
         params: {"page": pageNum, "size": pageSize},
       );
       _albumPostList['data']['articles'].addAll(more['data']['articles']);
-      List articles = more.data.toJson()['articles'];
+      List articles = more['data']['articles'];
       if (articles.length == 0) {
         isNoMoreData = true;
         SmartDialog.showToast('我也是有底线的~');
@@ -148,7 +148,7 @@ class _HomePageState extends State<HomePage>
         params: {"page": pageNum, "size": pageSize},
       );
       _postList['data']['topics'].addAll(more['data']['topics']);
-      List topics = more.data.toJson()['topics'];
+      List topics = more['data']['topics'];
       if (topics.length == 0) {
         isNoMoreData = true;
         SmartDialog.showToast('我也是有底线的~');

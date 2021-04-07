@@ -149,14 +149,20 @@ class _PostDetailPageState extends State<PostDetailPage> {
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text(
-            board == null ? '--' : board['title'],
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              color: AppColors.white,
-              fontFamily: 'Montserrat',
-              fontSize: duSetFontSize(14),
-              fontWeight: FontWeight.w600,
+          InkWell(
+            onTap: () {
+              Application.router.navigateTo(
+                  context, '/board/${board['id']}/${board['title']}');
+            },
+            child: Text(
+              board == null ? '--' : board['title'],
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: AppColors.white,
+                fontFamily: 'Montserrat',
+                fontSize: duSetFontSize(14),
+                fontWeight: FontWeight.w600,
+              ),
             ),
           ),
           board == null

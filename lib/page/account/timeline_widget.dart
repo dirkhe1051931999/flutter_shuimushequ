@@ -7,7 +7,6 @@ import 'package:shuimushequ/common/widgets/text_limt_display.dart';
 
 Widget timeLineWidget({dynamic content}) {
   List<Widget> _comment = [];
-  print(content.length);
   for (var i = 0; i < content.length; i++) {
     dynamic item = content[i];
     String body = item['body'];
@@ -109,7 +108,9 @@ Widget timeLineWidget({dynamic content}) {
       ),
     );
   }
-
+  if (content.length == 0) {
+    _comment.add(Text('暂无数据'));
+  }
   return Container(
     margin: EdgeInsets.symmetric(vertical: duSetHeight(10)),
     color: AppColors.bgGrey,

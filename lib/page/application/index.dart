@@ -20,7 +20,7 @@ class ApplicationPage extends StatefulWidget {
 class _ApplicationPageState extends State<ApplicationPage>
     with SingleTickerProviderStateMixin {
   int _page = 0;
-  final List<String> _tabTitles = ["Home", "Top 10", "讨论区", "我", 'test'];
+  final List<String> _tabTitles = ["Home", "Top 10", "讨论区", "我"];
   final List<BottomNavigationBarItem> _bottomTabs = <BottomNavigationBarItem>[
     // home
     new BottomNavigationBarItem(
@@ -74,18 +74,18 @@ class _ApplicationPageState extends State<ApplicationPage>
       label: 'Profile',
       backgroundColor: AppColors.white,
     ),
-    new BottomNavigationBarItem(
-      icon: Icon(
-        Icons.tab,
-        color: AppColors.tabBarElement,
-      ),
-      activeIcon: Icon(
-        Icons.tab,
-        color: AppColors.fontBlue,
-      ),
-      label: 'Test',
-      backgroundColor: AppColors.white,
-    ),
+    // new BottomNavigationBarItem(
+    //   icon: Icon(
+    //     Icons.tab,
+    //     color: AppColors.tabBarElement,
+    //   ),
+    //   activeIcon: Icon(
+    //     Icons.tab,
+    //     color: AppColors.fontBlue,
+    //   ),
+    //   label: 'Test',
+    //   backgroundColor: AppColors.white,
+    // ),
   ];
   PageController _pageController;
   Widget _buildAppbar() {
@@ -125,7 +125,7 @@ class _ApplicationPageState extends State<ApplicationPage>
         HotPage(),
         MessagePage(),
         Global.isOfflineLogin ? ProfilePage() : Container(),
-        TestPage(),
+        // TestPage(),
       ],
       controller: _pageController,
       onPageChanged: _handlePageChanged,

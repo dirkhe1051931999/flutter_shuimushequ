@@ -184,7 +184,10 @@ class _BoardPageState extends State<BoardPage>
           icon: Icon(Icons.search),
           color: AppColors.white,
           iconSize: duSetFontSize(25),
-          onPressed: () {},
+          onPressed: () {
+            Application.router.navigateTo(context,
+                '/board_search/${_boardHeader['title']}/${_boardHeader['name']}');
+          },
         )
       ],
       backgroundColor: Colors.black87,
@@ -213,7 +216,8 @@ class _BoardPageState extends State<BoardPage>
                     opacity: 0.5,
                     child: _boardHeader != null
                         ? Image.network(
-                            _boardHeader['section']['cover'],
+                            _boardHeader['section']['cover'] ??
+                                'https://attachment.ks3-cn-beijing.ksyun.com/47f4510009c31a33f7b7263787e8fbf4',
                             fit: BoxFit.cover,
                           )
                         : null,
@@ -222,7 +226,7 @@ class _BoardPageState extends State<BoardPage>
                 Positioned(
                   left: duSetWidth(15),
                   top: duSetHeight(168),
-                  child: _buildBoardInfo(),
+                  child: _buildBoardInfo((name, id) {}),
                 )
               ],
             ),
@@ -232,7 +236,7 @@ class _BoardPageState extends State<BoardPage>
     );
   }
 
-  Widget _buildBoardInfo() {
+  Widget _buildBoardInfo(Function onTapUser) {
     return _boardManager != null && _boardHeader != null
         ? Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -260,10 +264,8 @@ class _BoardPageState extends State<BoardPage>
                   ),
                   if (_boardManager['data'].length > 0)
                     GestureDetector(
-                      onTap: () {
-                        // Application.router.navigateTo(context,
-                        //     '/account/${_boardManager['data'][0]['id']}/${_boardManager['data'][0]['name']}');
-                      },
+                      onTap: () => onTapUser(_boardManager['data'][0]['name'],
+                          _boardManager['data'][0]['id']),
                       child: Padding(
                         padding: EdgeInsets.only(
                             left: duSetWidth(10), right: duSetWidth(5)),

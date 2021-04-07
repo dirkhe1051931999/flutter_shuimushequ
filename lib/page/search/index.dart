@@ -3,13 +3,17 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:group_button/group_button.dart';
+import 'package:html/parser.dart';
 import 'package:shuimushequ/common/api/index.dart';
+import 'package:shuimushequ/common/router/application.dart';
 import 'package:shuimushequ/common/type/search/articles.dart';
 import 'package:shuimushequ/common/type/search/board.dart';
 import 'package:shuimushequ/common/type/search/account.dart';
+import 'package:shuimushequ/common/utils/authentication.dart';
 import 'package:shuimushequ/common/utils/index.dart';
 import 'package:shuimushequ/common/values/index.dart';
 import 'package:shuimushequ/common/widgets/index.dart';
+import 'package:shuimushequ/global.dart';
 import 'package:shuimushequ/page/search/account_widget.dart';
 import 'package:shuimushequ/page/search/article_widget.dart';
 import 'package:shuimushequ/page/search/board.widget.dart';
@@ -177,10 +181,12 @@ class _SearchPageState extends State<SearchPage> {
             child: articleWidget(
               articles: _searchArticleResult,
               onTapArticle: (item) {
-                print('点击文章');
+                Application.router.navigateTo(
+                    context, '/post_details/${item['topic']['id']}');
               },
               onTapBoard: (item) {
-                print('点击板块');
+                Application.router.navigateTo(context,
+                    '/board/${item['board']['id']}/${item['board']['title']}');
               },
             ),
           );
@@ -197,13 +203,27 @@ class _SearchPageState extends State<SearchPage> {
             child: accountWidget(
               accounts: _searchAccountResult,
               onTapUser: (item) {
-                print(item);
+                String name = parse(item['name']).body.text;
+                String id = item['id'];
+                String regexString = r'(^[0-9a-zA-Z_]{1,}$)';
+                RegExp regExp = new RegExp(regexString);
+                if (regExp.hasMatch(name) == false) {
+                  SmartDialog.showToast('该网友名字不合法');
+                  return;
+                }
+                Application.router.navigateTo(context, '/account/$id/$name');
               },
               onTapFollow: (item) {
                 print(item);
+                if (Global.isOfflineLogin == false) {
+                  goLoginPage(context);
+                }
               },
               onTapUnFollow: (item) {
                 print(item);
+                if (Global.isOfflineLogin == false) {
+                  goLoginPage(context);
+                }
               },
             ),
           );
@@ -220,7 +240,8 @@ class _SearchPageState extends State<SearchPage> {
             child: boardWidget(
               boards: _searchBoardResult,
               onTap: (item) {
-                print(item);
+                Application.router.navigateTo(
+                    context, '/board/${item['id']}/${item['title']}');
               },
             ),
           );
